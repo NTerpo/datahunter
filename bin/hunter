@@ -8,7 +8,7 @@ require 'rest_client'
 require 'launchy'
 require 'colorize'
 
-program :version, '0.0.1'
+program :version, '0.0.2'
 program :description, 'Find open data easily and quicker than ever'
 
 command :find do |c|
