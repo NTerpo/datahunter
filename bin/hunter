@@ -1,0 +1,204 @@
+#!/usr/bin/env ruby
+
+require 'hunter'
+require 'rubygems'
+require 'json'
+require 'commander/import'
+require 'rest_client'
+require 'launchy'
+require 'colorize'
+
+program :version, '0.0.1'
+program :description, 'Find open data easily and quicker than ever'
+
+command :find do |c|
+  c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
+  c.summary = 'Returns the 3 most popular (most reused, viewed, etc) datasets corresponding to the triple keyword, spatial-coverage and temporal-coverage'
+  c.description = c.summary
+  c.example 'Find open data for the U.S. population', 'hunter find population us'
+  c.action do |args, options|
+    tag = args[0]
+    geo = args[1]
+    temp = args[2]
+
+    tag = tag.downcase if tag
+    geo = geo.downcase if geo
+    
+    start_time = Time.now
+
+    if geo.nil? and temp.nil?
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}"
+    elsif temp.nil?
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}"
+    elsif geo.nil?
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&temporal=#{temp}"
+    else
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
+    end
+
+    response = RestClient.get(url, :content_type => :json){ |response, request, result, &block|
+      elapsed_time = Time.now - start_time
+      case response.code
+      when 200
+        ds = JSON.parse(response.body).reverse
+        puts "### Response in #{elapsed_time} seconds".colorize(:blue)
+        puts "### Looks like we've got something for you!".colorize(:blue)
+        puts
+        puts ("title: ".colorize(:green) + "#{ds[0]["title"]}") 
+        puts ("description: ".colorize(:green) + "#{ds[0]["description"]}") 
+        puts ("publisher: ".colorize(:green) + "#{ds[0]["publisher"]}") 
+        puts ("temporal: ".colorize(:green) + "#{ds[0]["temporal"]}") 
+        puts ("spatial: ".colorize(:green) + "#{ds[0]["spatial"]}") 
+        puts ("created: ".colorize(:green) + "#{ds[0]["created"]}") 
+        puts ("updated: ".colorize(:green) + "#{ds[0]["updated"]}")
+        puts ("score: ".colorize(:green) + "#{ds[0]["huntscore"]}")
+        puts
+        case ask "### get the data? (y/n)".colorize(:yellow)
+        when 'y'
+          Launchy.open(ds[0]["uri"], options = {})
+        when 'n'
+          if ds[1].nil?
+            puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
+            puts "nicolas@rawdatahunter.com".colorize(:blue)
+          else
+            puts "### And this one?".colorize(:blue)
+            puts
+            puts ("title: ".colorize(:green) + "#{ds[1]["title"]}") 
+            puts ("description: ".colorize(:green) + "#{ds[1]["description"]}") 
+            puts ("publisher: ".colorize(:green) + "#{ds[1]["publisher"]}") 
+            puts ("temporal: ".colorize(:green) + "#{ds[1]["temporal"]}") 
+            puts ("spatial: ".colorize(:green) + "#{ds[1]["spatial"]}") 
+            puts ("created: ".colorize(:green) + "#{ds[1]["created"]}") 
+            puts ("updated: ".colorize(:green) + "#{ds[1]["updated"]}")
+            puts ("score: ".colorize(:green) + "#{ds[1]["huntscore"]}")
+            puts
+            case ask "### get the data? (y/n)".colorize(:yellow)
+            when 'y'
+              Launchy.open(ds[1]["uri"], options = {})
+            when 'n'
+              if ds[2].nil?
+                puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
+                puts "nicolas@rawdatahunter.com".colorize(:blue)
+              else
+                puts "### Last try...".colorize(:blue)
+                puts
+                puts ("title: ".colorize(:green) + "#{ds[2]["title"]}") 
+                puts ("description: ".colorize(:green) + "#{ds[2]["description"]}") 
+                puts ("publisher: ".colorize(:green) + "#{ds[2]["publisher"]}") 
+                puts ("temporal: ".colorize(:green) + "#{ds[2]["temporal"]}") 
+                puts ("spatial: ".colorize(:green) + "#{ds[2]["spatial"]}") 
+                puts ("created: ".colorize(:green) + "#{ds[2]["created"]}") 
+                puts ("updated: ".colorize(:green) + "#{ds[2]["updated"]}")
+                puts ("score: ".colorize(:green) + "#{ds[2]["huntscore"]}")
+                puts
+                case ask "### get the data? (y/n)".colorize(:yellow)
+                when 'y'
+                  Launchy.open(ds[2]["uri"], options = {})
+                when 'n'
+                  puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{tag}'".colorize(:blue))
+                  puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate: ".colorize(:red))
+                  puts "nicolas@rawdatahunter.com".colorize(:blue)
+                end
+              end
+            end
+          end
+        end
+      when 500
+        puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
+        puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
+        puts "nicolas@rawdatahunter.com".colorize(:blue)
+      else
+        response.return!(request, result, &block)
+      end
+    }
+  end
+end
+
+command :search do |c|
+  c.syntax = 'hunter search keyword [spatial-coverage] [temporal-coverage]'
+  c.summary = 'Returns all the datasets corresponding to the query, sorted by popularity'
+  c.description = c.summary
+  c.example 'Search open data for population', 'hunter search population'
+  c.action do |args, options|
+    tag = args[0]
+    geo = args[1]
+    temp = args[2]
+
+    tag = tag.downcase if tag
+    geo = geo.downcase if geo
+
+    start_time = Time.now
+
+    if geo.nil? and temp.nil?
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}"
+    elsif temp.nil?
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}"
+    elsif geo.nil?
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&temporal=#{temp}"
+    else
+      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
+    end
+
+    response = RestClient.get(url, :content_type => :json){ |response, request, result, &block|
+
+      elapsed_time = Time.now - start_time
+
+      case response.code
+      when 200
+        ds = JSON.parse(response.body).reverse
+        puts "### Response in #{elapsed_time} seconds".colorize(:blue)
+        puts "### We've found #{ds.size} datasets corresponding to your query #{tag}:".colorize(:blue)
+        puts
+        ds.each do |result|
+          puts ("#{result["title"]}".colorize(:green) + " (#{result["uri"]})")
+        end
+
+      when 500
+        puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
+        puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
+        puts "nicolas@rawdatahunter.com".colorize(:blue)
+      else
+        response.return!(request, result, &block)
+      end
+    }
+  end
+end
+
+command :hunter do |c|
+  c.syntax = 'hunter hunter'
+  c.summary = 'About Hunter'
+  c.description = c.summary
+  c.action do |args, options|
+    puts "
+...........888888888888888..............     
+........8888888888888888888888..........
+.....88888888888888888888888888888......     
+....8888888888888888888888888888888.....
+...888888888888888888888888888~88888?...
+..88888...888888888888888888..+888888...
+.888888.=....................O78888888..
+?888888.......................Z88888888.
+8888888.......................888888888.
+8888888.......................888888888.
+8888888:......8O.......88.....888888888.
+88......ZO.....8=.....Z8.....8888888888.
+$.........:8...............888888888888.
+............8.............8888888888888.
+..............O.........:88888888888888.
+...............8........88888888888888..
+................O......8.......888888...
+ ................8.88.8.........=8887 ..
+. ................8888...........?8.....
+.. ...........................8888......
+... .........................888........
+....  .....................:88..........
+.....      ...............8.............".colorize(:red)
+    puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets research better!".colorize(:blue)
+    case ask "### give feedback? (y/n)".colorize(:yellow)
+    when 'y'
+      Launchy.open("http://rawdatahunter.com/contact/", options = {})
+    when 'n'
+      puts "Bye for now!"
+    end
+  end
+end
