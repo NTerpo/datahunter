@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'hunter'
+require 'datahunter'
 require 'rubygems'
 require 'json'
 require 'commander/import'
