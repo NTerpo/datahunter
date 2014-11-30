@@ -1,26 +1,14 @@
 # Datahunter
 
-TODO: Write a gem description
+![screenshot](./logo.png)
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'datahunter'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install datahunter
 
 ## Usage
 
-TODO: Write usage instructions here
+![usage](./hunter.gif)
 
 ## Contributing
 
