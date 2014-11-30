@@ -8,8 +8,10 @@ require 'rest_client'
 require 'launchy'
 require 'colorize'
 
-program :version, '0.0.2'
+program :version, '0.0.3'
 program :description, 'Find open data easily and quicker than ever'
+
+feedback_url = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
 
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
@@ -21,7 +23,7 @@ command :find do |c|
     geo = args[1]
     temp = args[2]
 
-    tag = tag.downcase if tag
+    tag = tag.downcase.split.first if tag
     geo = geo.downcase if geo
     
     start_time = Time.now
@@ -59,7 +61,12 @@ command :find do |c|
         when 'n'
           if ds[1].nil?
             puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-            puts "nicolas@rawdatahunter.com".colorize(:blue)
+            case ask "### give feedback? (y/n)".colorize(:yellow)
+            when 'y'
+              Launchy.open(feedback_url, options = {})
+            when 'n'
+              puts "Bye for now!"
+            end
           else
             puts "### And this one?".colorize(:blue)
             puts
@@ -78,7 +85,12 @@ command :find do |c|
             when 'n'
               if ds[2].nil?
                 puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-                puts "nicolas@rawdatahunter.com".colorize(:blue)
+                case ask "### give feedback? (y/n)".colorize(:yellow)
+                when 'y'
+                  Launchy.open(feedback_url, options = {})
+                when 'n'
+                  puts "Bye for now!"
+                end
               else
                 puts "### Last try...".colorize(:blue)
                 puts
@@ -97,7 +109,12 @@ command :find do |c|
                 when 'n'
                   puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{tag}'".colorize(:blue))
                   puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate: ".colorize(:red))
-                  puts "nicolas@rawdatahunter.com".colorize(:blue)
+                  case ask "### give feedback? (y/n)".colorize(:yellow)
+                  when 'y'
+                    Launchy.open(feedback_url, options = {})
+                  when 'n'
+                    puts "Bye for now!"
+                  end
                 end
               end
             end
@@ -106,7 +123,12 @@ command :find do |c|
       when 500
         puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
         puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-        puts "nicolas@rawdatahunter.com".colorize(:blue)
+        case ask "### give feedback? (y/n)".colorize(:yellow)
+        when 'y'
+          Launchy.open(feedback_url, options = {})
+        when 'n'
+          puts "Bye for now!"
+        end
       else
         response.return!(request, result, &block)
       end
@@ -124,7 +146,7 @@ command :search do |c|
     geo = args[1]
     temp = args[2]
 
-    tag = tag.downcase if tag
+    tag = tag.downcase.split.first if tag
     geo = geo.downcase if geo
 
     start_time = Time.now
@@ -156,7 +178,12 @@ command :search do |c|
       when 500
         puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
         puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-        puts "nicolas@rawdatahunter.com".colorize(:blue)
+        case ask "### give feedback? (y/n)".colorize(:yellow)
+        when 'y'
+          Launchy.open(feedback_url, options = {})
+        when 'n'
+          puts "Bye for now!"
+        end
       else
         response.return!(request, result, &block)
       end
@@ -196,7 +223,7 @@ $.........:8...............888888888888.
     puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets research better!".colorize(:blue)
     case ask "### give feedback? (y/n)".colorize(:yellow)
     when 'y'
-      Launchy.open("http://rawdatahunter.com/contact/", options = {})
+      Launchy.open(feedback_url, options = {})
     when 'n'
       puts "Bye for now!"
     end
