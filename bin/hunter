@@ -8,7 +8,7 @@ require 'rest_client'
 require 'launchy'
 require 'colorize'
 
-program :version, '0.0.3'
+program :version, Datahunter::VERSION
 program :description, 'Find open data easily and quicker than ever'
 
 feedback_url = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
@@ -19,24 +19,9 @@ command :find do |c|
   c.description = c.summary
   c.example 'Find open data for the U.S. population', 'hunter find population us'
   c.action do |args, options|
-    tag = args[0]
-    geo = args[1]
-    temp = args[2]
-
-    tag = tag.downcase.split.first if tag
-    geo = geo.downcase if geo
-    
     start_time = Time.now
 
-    if geo.nil? and temp.nil?
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}"
-    elsif temp.nil?
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}"
-    elsif geo.nil?
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&temporal=#{temp}"
-    else
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
-    end
+    url = Datahunter.datasets_url(args[0], args[1], args[2])
 
     response = RestClient.get(url, :content_type => :json){ |response, request, result, &block|
       elapsed_time = Time.now - start_time
@@ -46,75 +31,42 @@ command :find do |c|
         puts "### Response in #{elapsed_time} seconds".colorize(:blue)
         puts "### Looks like we've got something for you!".colorize(:blue)
         puts
-        puts ("title: ".colorize(:green) + "#{ds[0]["title"]}") 
-        puts ("description: ".colorize(:green) + "#{ds[0]["description"]}") 
-        puts ("publisher: ".colorize(:green) + "#{ds[0]["publisher"]}") 
-        puts ("temporal: ".colorize(:green) + "#{ds[0]["temporal"]}") 
-        puts ("spatial: ".colorize(:green) + "#{ds[0]["spatial"]}") 
-        puts ("created: ".colorize(:green) + "#{ds[0]["created"]}") 
-        puts ("updated: ".colorize(:green) + "#{ds[0]["updated"]}")
-        puts ("score: ".colorize(:green) + "#{ds[0]["huntscore"]}")
-        puts
+
+        Datahunter.print_dataset_info ds[0]
+
         case ask "### get the data? (y/n)".colorize(:yellow)
         when 'y'
           Launchy.open(ds[0]["uri"], options = {})
         when 'n'
           if ds[1].nil?
             puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-            case ask "### give feedback? (y/n)".colorize(:yellow)
-            when 'y'
-              Launchy.open(feedback_url, options = {})
-            when 'n'
-              puts "Bye for now!"
-            end
+            Datahunter.print_feedback_request
           else
             puts "### And this one?".colorize(:blue)
             puts
-            puts ("title: ".colorize(:green) + "#{ds[1]["title"]}") 
-            puts ("description: ".colorize(:green) + "#{ds[1]["description"]}") 
-            puts ("publisher: ".colorize(:green) + "#{ds[1]["publisher"]}") 
-            puts ("temporal: ".colorize(:green) + "#{ds[1]["temporal"]}") 
-            puts ("spatial: ".colorize(:green) + "#{ds[1]["spatial"]}") 
-            puts ("created: ".colorize(:green) + "#{ds[1]["created"]}") 
-            puts ("updated: ".colorize(:green) + "#{ds[1]["updated"]}")
-            puts ("score: ".colorize(:green) + "#{ds[1]["huntscore"]}")
-            puts
+
+            Datahunter.print_dataset_info ds[1]
+
             case ask "### get the data? (y/n)".colorize(:yellow)
             when 'y'
               Launchy.open(ds[1]["uri"], options = {})
             when 'n'
               if ds[2].nil?
                 puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-                case ask "### give feedback? (y/n)".colorize(:yellow)
-                when 'y'
-                  Launchy.open(feedback_url, options = {})
-                when 'n'
-                  puts "Bye for now!"
-                end
+                Datahunter.print_feedback_request
               else
                 puts "### Last try...".colorize(:blue)
                 puts
-                puts ("title: ".colorize(:green) + "#{ds[2]["title"]}") 
-                puts ("description: ".colorize(:green) + "#{ds[2]["description"]}") 
-                puts ("publisher: ".colorize(:green) + "#{ds[2]["publisher"]}") 
-                puts ("temporal: ".colorize(:green) + "#{ds[2]["temporal"]}") 
-                puts ("spatial: ".colorize(:green) + "#{ds[2]["spatial"]}") 
-                puts ("created: ".colorize(:green) + "#{ds[2]["created"]}") 
-                puts ("updated: ".colorize(:green) + "#{ds[2]["updated"]}")
-                puts ("score: ".colorize(:green) + "#{ds[2]["huntscore"]}")
-                puts
+
+                Datahunter.print_dataset_info ds[2]
+
                 case ask "### get the data? (y/n)".colorize(:yellow)
                 when 'y'
                   Launchy.open(ds[2]["uri"], options = {})
                 when 'n'
                   puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{tag}'".colorize(:blue))
                   puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate: ".colorize(:red))
-                  case ask "### give feedback? (y/n)".colorize(:yellow)
-                  when 'y'
-                    Launchy.open(feedback_url, options = {})
-                  when 'n'
-                    puts "Bye for now!"
-                  end
+                  Datahunter.print_feedback_request
                 end
               end
             end
@@ -123,12 +75,7 @@ command :find do |c|
       when 500
         puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
         puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-        case ask "### give feedback? (y/n)".colorize(:yellow)
-        when 'y'
-          Launchy.open(feedback_url, options = {})
-        when 'n'
-          puts "Bye for now!"
-        end
+        Datahunter.print_feedback_request
       else
         response.return!(request, result, &block)
       end
@@ -142,26 +89,12 @@ command :search do |c|
   c.description = c.summary
   c.example 'Search open data for population', 'hunter search population'
   c.action do |args, options|
-    tag = args[0]
-    geo = args[1]
-    temp = args[2]
-
-    tag = tag.downcase.split.first if tag
-    geo = geo.downcase if geo
 
     start_time = Time.now
 
-    if geo.nil? and temp.nil?
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}"
-    elsif temp.nil?
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}"
-    elsif geo.nil?
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&temporal=#{temp}"
-    else
-      url = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
-    end
+    url = Datahunter.datasets_url(args[0], args[1], args[2])
 
-    response = RestClient.get(url, :content_type => :json){ |response, request, result, &block|
+    response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
 
       elapsed_time = Time.now - start_time
 
@@ -178,16 +111,11 @@ command :search do |c|
       when 500
         puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
         puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-        case ask "### give feedback? (y/n)".colorize(:yellow)
-        when 'y'
-          Launchy.open(feedback_url, options = {})
-        when 'n'
-          puts "Bye for now!"
-        end
+        Datahunter.print_feedback_request
       else
         response.return!(request, result, &block)
       end
-    }
+    end
   end
 end
 
@@ -197,9 +125,9 @@ command :hunter do |c|
   c.description = c.summary
   c.action do |args, options|
     puts "
-...........888888888888888..............     
+...........888888888888888..............
 ........8888888888888888888888..........
-.....88888888888888888888888888888......     
+.....88888888888888888888888888888......
 ....8888888888888888888888888888888.....
 ...888888888888888888888888888~88888?...
 ..88888...888888888888888888..+888888...
@@ -221,11 +149,6 @@ $.........:8...............888888888888.
 ....  .....................:88..........
 .....      ...............8.............".colorize(:red)
     puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets research better!".colorize(:blue)
-    case ask "### give feedback? (y/n)".colorize(:yellow)
-    when 'y'
-      Launchy.open(feedback_url, options = {})
-    when 'n'
-      puts "Bye for now!"
-    end
+    Datahunter.print_feedback_request
   end
 end
