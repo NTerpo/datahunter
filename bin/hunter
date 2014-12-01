@@ -11,75 +11,60 @@ require 'colorize'
 program :version, Datahunter::VERSION
 program :description, 'Find open data easily and quicker than ever'
 
-feedback_url = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
-
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = 'Returns the 3 most popular (most reused, viewed, etc) datasets corresponding to the triple keyword, spatial-coverage and temporal-coverage'
+  c.summary = 'Returns the 3 most popular (most reused, viewed, etc) datasets corresponding '\
+              'to the triple keyword, spatial-coverage and temporal-coverage'
   c.description = c.summary
   c.example 'Find open data for the U.S. population', 'hunter find population us'
   c.action do |args, options|
+
     start_time = Time.now
 
     url = Datahunter.datasets_url(args[0], args[1], args[2])
 
-    response = RestClient.get(url, :content_type => :json){ |response, request, result, &block|
+    response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
       elapsed_time = Time.now - start_time
+
       case response.code
       when 200
-        ds = JSON.parse(response.body).reverse
+        datasets = JSON.parse(response.body).reverse
         puts "### Response in #{elapsed_time} seconds".colorize(:blue)
-        puts "### Looks like we've got something for you!".colorize(:blue)
-        puts
 
-        Datahunter.print_dataset_info ds[0]
+        messages = [
+          "### Looks like we've got something for you!".colorize(:blue),
+          "### And this one?".colorize(:blue),
+          "### Last try...".colorize(:blue)
+        ]
 
-        case ask "### get the data? (y/n)".colorize(:yellow)
-        when 'y'
-          Launchy.open(ds[0]["uri"], options = {})
-        when 'n'
-          if ds[1].nil?
-            puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-            Datahunter.print_feedback_request
-          else
-            puts "### And this one?".colorize(:blue)
-            puts
+        3.times do |index|
+          puts messages[index]
+          puts
+          Datahunter.print_dataset_info datasets[index]
 
-            Datahunter.print_dataset_info ds[1]
-
-            case ask "### get the data? (y/n)".colorize(:yellow)
-            when 'y'
-              Launchy.open(ds[1]["uri"], options = {})
-            when 'n'
-              if ds[2].nil?
-                puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
-                Datahunter.print_feedback_request
-              else
-                puts "### Last try...".colorize(:blue)
-                puts
-
-                Datahunter.print_dataset_info ds[2]
-
-                case ask "### get the data? (y/n)".colorize(:yellow)
-                when 'y'
-                  Launchy.open(ds[2]["uri"], options = {})
-                when 'n'
-                  puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{tag}'".colorize(:blue))
-                  puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate: ".colorize(:red))
-                  Datahunter.print_feedback_request
-                end
-              end
+          case ask "### get the data? (y/n)".colorize(:yellow)
+          when 'y'
+            Launchy.open(datasets[index]["uri"], options = {})
+            break
+          else # When no
+            if index == 2
+              puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{args[0].downcase}'".colorize(:blue))
+            end
+            if index >= 2 or datasets[index+1].nil?
+              Datahunter.print_excuse_message
+              Datahunter.print_feedback_request
+              break
             end
           end
         end
       when 500
         puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
-        puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
+        Datahunter.print_excuse_message
         Datahunter.print_feedback_request
       else
         response.return!(request, result, &block)
       end
-    }
+    end
   end
 end
 
@@ -100,17 +85,16 @@ command :search do |c|
 
       case response.code
       when 200
-        ds = JSON.parse(response.body).reverse
+        datasets = JSON.parse(response.body).reverse
         puts "### Response in #{elapsed_time} seconds".colorize(:blue)
-        puts "### We've found #{ds.size} datasets corresponding to your query #{tag}:".colorize(:blue)
+        puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
         puts
-        ds.each do |result|
+        datasets.each do |result|
           puts ("#{result["title"]}".colorize(:green) + " (#{result["uri"]})")
         end
-
       when 500
-        puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
-        puts ("Remember, this is a first prototype, there will surely be a lot more datasets indexed soon. If you want us to find a dataset for you, or if you just want to give us a feedback, don't hesitate!".colorize(:red))
+        puts "We found nothing for your query: as every good hunter... we are still learning".colorize(:red)
+        Datahunter.print_excuse_message
         Datahunter.print_feedback_request
       else
         response.return!(request, result, &block)

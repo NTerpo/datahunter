@@ -2,20 +2,21 @@ require 'colorize'
 require 'launchy'
 
 module Datahunter
-  BASE_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
+  DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
+  FEEDBACK_URL = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
 
   def self.datasets_url tag, geo=nil, temp=nil
     tag = tag.downcase.split.first if tag
     geo = geo.downcase if geo
 
     if geo.nil? and temp.nil?
-      "#{BASE_URL}?tags=#{tag}"
+      "#{DATASETS_URL}?tags=#{tag}"
     elsif temp.nil?
-      "#{BASE_URL}?tags=#{tag}&spatial=#{geo}"
+      "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}"
     elsif geo.nil?
-      "#{BASE_URL}?tags=#{tag}&temporal=#{temp}"
+      "#{DATASETS_URL}?tags=#{tag}&temporal=#{temp}"
     else
-      "#{BASE_URL}?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
+      "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
     end
   end
 
@@ -38,5 +39,11 @@ module Datahunter
     else
       puts "Bye for now!"
     end
+  end
+
+  def self.print_excuse_message
+    puts "Remember, this is a first prototype, there will surely be a lot more "\
+         "datasets indexed soon. If you want us to find a dataset for you, or "\
+         "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 end
