@@ -1,5 +1,5 @@
+require "datahunter/base"
 require "datahunter/version"
 
 module Datahunter
-  # Your code goes here...
 end
