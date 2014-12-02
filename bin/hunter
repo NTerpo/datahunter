@@ -21,48 +21,52 @@ command :find do |c|
 
     start_time = Time.now
 
-    url = Datahunter.datasets_url(args[0], args[1], args[2])
+    if args[0].nil?
+      puts "usage: $ hunter find keyword [geo] [temp]"
+    elsif
+      url = Datahunter.datasets_url(args[0], args[1], args[2])
 
-    response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
-      elapsed_time = Time.now - start_time
+      response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
+        elapsed_time = Time.now - start_time
 
-      case response.code
-      when 200
-        datasets = JSON.parse(response.body).reverse
-        puts "### Response in #{elapsed_time} seconds".colorize(:blue)
-
-        messages = [
-          "### Looks like we've got something for you!".colorize(:blue),
-          "### And this one?".colorize(:blue),
-          "### Last try...".colorize(:blue)
-        ]
-
-        3.times do |index|
-          puts messages[index]
-          puts
-          Datahunter.print_dataset_info datasets[index]
-
-          case ask "### get the data? (y/n)".colorize(:yellow)
-          when 'y'
-            Launchy.open(datasets[index]["uri"], options = {})
-            break
-          else # When no
-            if index == 2
-              puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{args[0].downcase}'".colorize(:blue))
-            end
-            if index >= 2 or datasets[index+1].nil?
-              Datahunter.print_excuse_message
-              Datahunter.print_feedback_request
+        case response.code
+        when 200
+          datasets = JSON.parse(response.body).reverse
+          puts "### Response in #{elapsed_time} seconds".colorize(:blue)
+          
+          messages = [
+            "### Looks like we've got something for you!".colorize(:blue),
+            "### And this one?".colorize(:blue),
+            "### Last try...".colorize(:blue)
+          ]
+          
+          3.times do |index|
+            puts messages[index]
+            puts
+            Datahunter.print_dataset_info datasets[index]
+            
+            case ask "### get the data? (y/n)".colorize(:yellow)
+            when 'y'
+              Launchy.open(datasets[index]["uri"], options = {})
               break
+            else # When no
+              if index == 2
+                puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{args[0].downcase}'".colorize(:blue))
+              end
+              if index >= 2 or datasets[index+1].nil?
+                Datahunter.print_excuse_message
+                Datahunter.print_feedback_request
+                break
+              end
             end
           end
+        when 500
+          puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
+          Datahunter.print_excuse_message
+          Datahunter.print_feedback_request
+        else
+          response.return!(request, result, &block)
         end
-      when 500
-        puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
-        Datahunter.print_excuse_message
-        Datahunter.print_feedback_request
-      else
-        response.return!(request, result, &block)
       end
     end
   end
@@ -103,8 +107,8 @@ command :search do |c|
   end
 end
 
-command :hunter do |c|
-  c.syntax = 'hunter hunter'
+command :about do |c|
+  c.syntax = 'hunter about'
   c.summary = 'About Hunter'
   c.description = c.summary
   c.action do |args, options|

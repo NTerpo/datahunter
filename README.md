@@ -8,6 +8,8 @@
 
 ## Usage
 
+    $ hunter find population france
+
 ![usage](./hunter.gif)
 
 ## Contributing

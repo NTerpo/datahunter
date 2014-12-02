@@ -35,7 +35,7 @@ module Datahunter
   def self.print_feedback_request
     case ask "### give feedback? (y/n)".colorize(:yellow)
     when 'y'
-      Launchy.open(feedback_url, options = {})
+      Launchy.open(FEEDBACK_URL, options = {})
     else
       puts "Bye for now!"
     end
