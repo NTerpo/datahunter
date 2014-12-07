@@ -12,7 +12,7 @@ We believe there will be more and more data available on the web and the main is
     $ gem install datahunter
 
 ## Usage
-
+### $ hunter find
     $ hunter find population france
     ### Response in 0.569162 seconds
     ### Looks like we've got something for you!
@@ -38,6 +38,23 @@ We believe there will be more and more data available on the web and the main is
     => n: suggest the next most popular dataset corresponding to the query
 
 ![usage](./hunter.gif)
+
+### $ hunter search
+
+    $ hunter search paris
+    ### Response in 0.281749 seconds
+    ### We've found 5 datasets corresponding to your query paris:
+
+    Vélib' - Paris et communes limitrophes (https://www.data.gouv.fr/fr/datasets/velib-paris-et-communes-limitrophes-idf/)
+
+    Liste des sites des hotspots Paris WiFi (https://www.data.gouv.fr/fr/datasets/liste-des-sites-des-hotspots-paris-wifi-prs/)
+
+    Liste des casernes à Paris et dans les départements de la petite couronne (https://www.data.gouv.fr/fr/datasets/liste-des-casernes-a-paris-et-dans-les-departements-de-la-petite-couronne-551678/)
+
+    Points d'accueil police (coordonnées) - Paris (https://www.data.gouv.fr/fr/datasets/points-d-accueil-police-coordonnees-paris-30379560/)
+
+    Lieux de tournage de films (long métrage) (https://www.data.gouv.fr/fr/datasets/lieux-de-tournage-de-films-long-metrage-prs/)
+
 
 ## Feedbacks
 Don't hesitate to [give us any feedback about you experience with Hunter!](https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform?usp=send_form)
