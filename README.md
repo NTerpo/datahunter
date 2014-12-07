@@ -1,6 +1,11 @@
-# Datahunter
+# Hunter
 
 ![screenshot](./logo.png)
+
+## Hunter 
+
+We believe there will be more and more data available on the web and the main issue will be to find them and to manage each sources. So we try to do it for you: not by pre-processing them but by orienting you. 
+
 
 ## Installation
 
@@ -29,8 +34,13 @@
     score: 25.893
 
     ### get the data? (y/n)
+    => y: open your favorite browser at the page where you'll be able to preview and download the data
+    => n: suggest the next most popular dataset corresponding to the query
 
 ![usage](./hunter.gif)
+
+## Feedbacks
+Don't hesitate to [give us any feedback about you experience with Hunter!](https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform?usp=send_form)
 
 ## Roadmap
 
