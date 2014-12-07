@@ -1,4 +1,4 @@
-Copyright (c) 2014 Terpo
+Copyright (c) 2014 Terpolilli
 
 MIT License
 
