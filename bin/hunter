@@ -9,7 +9,7 @@ require 'launchy'
 require 'colorize'
 
 program :version, Datahunter::VERSION
-program :description, 'Find open data easily and quicker than ever'
+program :description, 'Find Open Data directly from your terminal'
 
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'

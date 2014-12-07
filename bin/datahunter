@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'datahunter'
+require 'colorize'
+
+puts "usage: ".colorize(:red)
+puts "$ hunter find keyword [geo] [temp]".colorize(:blue)
