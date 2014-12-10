@@ -51,6 +51,8 @@ command :find do |c|
             when 'y'
               # Launchy.open(datasets[index]["uri"], options = {})
               Datahunter.print_downloadable_links datasets[index]
+              dl = ask "### which format? (0/1/...)".colorize(:yellow)
+              Launchy.open(datasets[index]["resources"][dl]["url"], options = {})
               break
             else # When no
               if index == 2
