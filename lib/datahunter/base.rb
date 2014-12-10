@@ -34,9 +34,13 @@ module Datahunter
     puts
   end
   
-  # def self.print_downloadable_links dataset
-  #   dataset["resources"].each do ||
-  # end
+  def self.print_downloadable_links dataset
+    dataset["resources"].each_with_index do |dl, i|
+      puts ("#{i}. ".colorize(:yellow) +
+            "#{dl["title"]} - ".colorize(:blue) + 
+            "#{dl["format"]}".colorize(:green))
+    end
+  end
 
   def self.print_feedback_request
     case ask "### give feedback? (y/n)".colorize(:yellow)
