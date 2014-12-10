@@ -2,7 +2,9 @@ require 'colorize'
 require 'launchy'
 
 module Datahunter
-  DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
+
+  DATASETS_URL = "http://localhost:3000/api/datasets/"
+#  DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
   FEEDBACK_URL = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
 
   def self.datasets_url tag, geo=nil, temp=nil
@@ -31,6 +33,10 @@ module Datahunter
     puts ("score: ".colorize(:green) + "#{dataset["huntscore"]}")
     puts
   end
+  
+  # def self.print_downloadable_links dataset
+  #   dataset["resources"].each do ||
+  # end
 
   def self.print_feedback_request
     case ask "### give feedback? (y/n)".colorize(:yellow)

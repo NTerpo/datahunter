@@ -32,6 +32,8 @@ command :find do |c|
         case response.code
         when 200
           datasets = JSON.parse(response.body).reverse
+          puts url
+          puts datasets
           puts "### Response in #{elapsed_time} seconds".colorize(:blue)
           
           messages = [
