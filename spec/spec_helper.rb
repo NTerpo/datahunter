@@ -1,1 +1,1 @@
-require 'Datahunter'
+require 'datahunter'
