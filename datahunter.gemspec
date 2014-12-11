@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0")
   spec.files.reject! { |fn| fn.include? "gif" }
   spec.files.reject! { |fn| fn.include? "logo" }
+  spec.files.reject! { |fn| fn.include? "travis" }
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
