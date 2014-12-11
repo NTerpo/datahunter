@@ -4,6 +4,8 @@
 
 ## Hunter 
 
+[![Build Status](https://travis-ci.org/NTerpo/datahunter.svg?branch=master)](https://travis-ci.org/NTerpo/datahunter)
+
 We believe there will be more and more data available on the web and the main issue will be to find them and to manage each sources. So we try to do it for you: not by pre-processing them but by orienting you. 
 
 
