@@ -49,7 +49,13 @@ module Datahunter
     # path_name = Addressable::URI.parse(url).basename
     # path = "./Downloads/#{path_name}"
     Downloadr::HTTP.download(url)
-    puts "Your file has been downloaded, try $ ls".colorize(:green)
+    pbar = ConsoleProgressBar::ProgressBar.new
+    bar = pbar.bar
+    100.times do
+        sleep(0.1)
+        bar.draw
+    end
+    puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
   end
 
   def self.print_feedback_request
