@@ -46,12 +46,10 @@ module Datahunter
   end
 
   def self.download_file url
-    path_name = Addressable::URI.parse(url).basename
-    path = "./Downloads/#{path_name}"
-
-    Downloadr::HTTP.download(url, path)
-
-    puts "Your file has been downloaded, it should be in your Downloads folder"
+    # path_name = Addressable::URI.parse(url).basename
+    # path = "./Downloads/#{path_name}"
+    Downloadr::HTTP.download(url)
+    puts "Your file has been downloaded, try $ ls".colorize(:green)
   end
 
   def self.print_feedback_request
