@@ -1,7 +1,11 @@
 require 'colorize'
 require 'launchy'
+require 'downloadr'
+require 'addressable/uri'
 
 module Datahunter
+
+#  DATASETS_URL = "http://localhost:3000/api/datasets/"
   DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
   FEEDBACK_URL = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
 
@@ -30,6 +34,27 @@ module Datahunter
     puts ("updated: ".colorize(:green) + "#{dataset["updated"]}")
     puts ("score: ".colorize(:green) + "#{dataset["huntscore"]}")
     puts
+  end
+  
+  def self.print_downloadable_links dataset
+    dataset["resources"].each_with_index do |dl, i|
+      puts ("#{i}. ".colorize(:yellow) +
+            "#{dl["title"]} - ".colorize(:blue) + 
+            "#{dl["format"]}".colorize(:green))
+    end
+  end
+
+  def self.download_file url
+    puts "Start downloading..."
+    Downloadr::HTTP.download(url)
+    puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
+  end
+
+  def self.download_the_data dataset
+    print_downloadable_links dataset
+    dl = ask "### which one? (0/1/...)".colorize(:yellow)
+    dl = dl.to_i
+    download_file dataset["resources"][dl]["url"]
   end
 
   def self.print_feedback_request
