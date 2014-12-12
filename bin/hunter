@@ -48,9 +48,12 @@ command :find do |c|
             
             case ask "### get the data? (y/n)".colorize(:yellow)
             when 'y'
-              
-              Datahunter.download_the_data datasets[index]
-
+              if datasets[index]["resources"]
+                Datahunter.download_the_data datasets[index]
+              else
+                puts "You can't download this dataset directly, but you should from there"
+                Launchy.open(datasets[index]["uri"], options = {})
+              end
               break
            
             else # When no
