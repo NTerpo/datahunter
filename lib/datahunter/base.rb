@@ -1,5 +1,6 @@
 require 'colorize'
 require 'launchy'
+require 'MDownloader'
 
 module Datahunter
 
@@ -39,6 +40,25 @@ module Datahunter
       puts ("#{i}. ".colorize(:yellow) +
             "#{dl["title"]} - ".colorize(:blue) + 
             "#{dl["format"]}".colorize(:green))
+    end
+  end
+
+  def self.download_file url
+    path = '~/testfile.zip'
+
+    options = Hash.new
+    options[:retry]  = :any #retry times, :any(any times retry), 0(no retry), or custom numbers(int)
+    options[:resume] = true #true or false, resume continue download, break point resume download
+
+    result, error = MDownloader.download(url, path, options) do |report|
+      puts "Progress:#{report[:percent]}% Lave:#{report[:min]}m#{report[:sec]}"
+    end
+
+    if result
+      puts 'Download finished!'
+    else
+      puts 'Download failed...'
+      puts error
     end
   end
 
