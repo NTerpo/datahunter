@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'colorize'
 require 'launchy'
 require 'downloadr'
@@ -46,9 +45,6 @@ module Datahunter
   end
 
   def self.download_file url
-    # path_name = Addressable::URI.parse(url).basename
-    # path = "./Downloads/#{path_name}"
-
     puts "Start downloading..."
     Downloadr::HTTP.download(url)
     puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)

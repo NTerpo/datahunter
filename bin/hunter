@@ -7,6 +7,7 @@ require 'commander/import'
 require 'rest_client'
 require 'launchy'
 require 'colorize'
+require 'downloadr'
 
 program :version, Datahunter::VERSION
 program :description, 'Find Open Data directly from your terminal'
@@ -47,12 +48,13 @@ command :find do |c|
             
             case ask "### get the data? (y/n)".colorize(:yellow)
             when 'y'
-              # Launchy.open(datasets[index]["uri"], options = {})
+
               Datahunter.print_downloadable_links datasets[index]
               dl = ask "### which one? (0/1/...)".colorize(:yellow)
               dl = dl.to_i
               Datahunter.download_file datasets[index]["resources"][dl]["url"]
               break
+           
             else # When no
               if index == 2
                 puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{args[0].downcase}'".colorize(:blue))
