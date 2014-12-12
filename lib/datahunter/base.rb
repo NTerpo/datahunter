@@ -3,6 +3,7 @@ require 'colorize'
 require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
+require 'console_progress_bar'
 
 module Datahunter
 
