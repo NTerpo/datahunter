@@ -3,7 +3,6 @@ require 'colorize'
 require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
-require 'console_progress_bar'
 
 module Datahunter
 
@@ -49,13 +48,7 @@ module Datahunter
   def self.download_file url
     # path_name = Addressable::URI.parse(url).basename
     # path = "./Downloads/#{path_name}"
-    Downloadr::HTTP.download(url)
-    pbar = ConsoleProgressBar::ProgressBar.new
-    bar = pbar.bar
-    100.times do
-        sleep(0.1)
-        bar.draw
-    end
+   
     puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
   end
 
