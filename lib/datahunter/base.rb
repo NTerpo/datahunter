@@ -47,7 +47,7 @@ module Datahunter
 
   def self.download_file url
     path_name = Addressable::URI.parse(url).basename
-    path = "~/Downloads/#{path_name}"
+    path = "./Downloads/#{path_name}"
 
     Downloadr::HTTP.download(url, path)
 
