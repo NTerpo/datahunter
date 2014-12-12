@@ -30,3 +30,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "launchy", "~> 2.4.3"
   spec.add_runtime_dependency "colorize", "~> 0.7.3"
   spec.add_runtime_dependency "downloadr", "0.0.41"
+end
