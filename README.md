@@ -64,7 +64,7 @@ Don't hesitate to [give us any feedback about you experience with Hunter!](https
 ## Roadmap
 
 * more datasets
-* download datasets from the terminal
+* download datasets from the terminal (very soon :) )
 * more generic lib to make the API more easy to reuse
 
 ## Contributing
