@@ -64,6 +64,7 @@ module Datahunter
   # end
 
   def self.download_file url
+    path = '~/Downloads/'
     Mechanize.new {|agent|
       agent.download(url)
     }
