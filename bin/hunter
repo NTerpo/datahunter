@@ -48,11 +48,9 @@ command :find do |c|
             
             case ask "### get the data? (y/n)".colorize(:yellow)
             when 'y'
+              
+              Datahunter.download_the_data datasets[index]
 
-              Datahunter.print_downloadable_links datasets[index]
-              dl = ask "### which one? (0/1/...)".colorize(:yellow)
-              dl = dl.to_i
-              Datahunter.download_file datasets[index]["resources"][dl]["url"]
               break
            
             else # When no

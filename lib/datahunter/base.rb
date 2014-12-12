@@ -50,6 +50,13 @@ module Datahunter
     puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
   end
 
+  def self.download_the_data dataset
+    print_downloadable_links dataset
+    dl = ask "### which one? (0/1/...)".colorize(:yellow)
+    dl = dl.to_i
+    download_file dataset["resources"][dl]["url"]
+  end
+
   def self.print_feedback_request
     case ask "### give feedback? (y/n)".colorize(:yellow)
     when 'y'
