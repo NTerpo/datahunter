@@ -48,7 +48,7 @@ command :find do |c|
             
             case ask "### get the data? (y/n)".colorize(:yellow)
             when 'y'
-              if datasets[index]["resources"]
+              if datasets[index]["resources"].any?
                 Datahunter.download_the_data datasets[index]
               else
                 puts "You can't download this dataset directly, but you should from there"
