@@ -54,7 +54,11 @@ module Datahunter
     print_downloadable_links dataset
     dl = ask "### which one? (0/1/...)".colorize(:yellow)
     dl = dl.to_i
-    download_file dataset["resources"][dl]["url"]
+    if dataset["resources"][dl]["format"] == "HTML"
+      Launchy.open(dataset["resources"][dl]["url"], options = {})
+    else
+      download_file dataset["resources"][dl]["url"]
+    end
   end
 
   def self.print_feedback_request
