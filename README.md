@@ -14,7 +14,43 @@ We believe there will be more and more data available on the web and the main is
     $ gem install datahunter
 
 ## Usage
-### $ hunter find
+
+### Example1. $ hunter find ~> download
+
+    $ hunter find alimentaires
+    ### Response in 0.430501 seconds
+    ### Looks like we've got something for you!
+
+    title: Produits alimentaires : ingrédients, nutrition, labels
+
+    description: [Open Food Facts](http://fr.openfoodfacts.org/) répertorie les informations sur les produits alimentaires : ingrédients, informations nutritionnelles, labels etc. Les données proviennent majoritairement de la collecte citoyenne (crowdsourcing) des informations.
+
+    publisher: Open Food Facts
+
+    temporal: all
+
+    spatial: ["france", "fr", "europe", "schengen", "eu", "ue", "countries", "world", "all"]
+
+    created: 2014-05-07T02:44:58.119Z
+
+    updated: 2014-12-13T16:40:14.136Z
+    
+    score: 13.427
+
+    ### get the data? (y/n)
+    y
+
+    0. Ingrédients, informations nutritionnelles et données sur les produits alimentaires - CSV
+    1. Ingrédients, informations nutritionnelles et données sur les produits alimentaires - RDF
+    2. Description des données, exports et API de la base de produits Open Food Facts - HTML
+
+    ### which one? (0/1/...)
+    0
+
+    Start downloading...
+    Your file has been downloaded, try to $ ls ;D
+
+### Example2. $ hunter find ~> open browser
     $ hunter find population france
     ### Response in 0.569162 seconds
     ### Looks like we've got something for you!
@@ -64,7 +100,7 @@ Don't hesitate to [give us any feedback about you experience with Hunter!](https
 ## Roadmap
 
 * more datasets
-* download datasets from the terminal (very soon :) )
+* improve the download of datasets
 * more generic lib to make the API more easy to reuse
 
 ## Contributing
