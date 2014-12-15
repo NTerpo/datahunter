@@ -10,12 +10,17 @@ require 'colorize'
 require 'downloadr'
 
 program :version, Datahunter::VERSION
-program :description, 'Find Open Data directly from your terminal'
+program :description, 'Find and download Open Datasets directly from your terminal'
+program :help_formatter, :compact
 
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = 'Returns the 3 most popular (most reused, viewed, etc) datasets corresponding '\
-              'to the triple keyword, spatial-coverage and temporal-coverage'
+  c.summary = '$ hunter find <keyword> <geo-coverage> <temporal-coverage>
+                             * Returns the 3 most popular (most reused, viewed, etc)
+                               datasets corresponding to the triple keyword,
+                               spatial-coverage and temporal-coverage
+                             * Allow you to either download the dataset or to open
+                               your favorite browser directly at the good page'.colorize(:blue)
   c.description = c.summary
   c.example 'Find open data for the U.S. population', 'hunter find population us'
   c.action do |args, options|
@@ -81,7 +86,10 @@ end
 
 command :search do |c|
   c.syntax = 'hunter search keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = 'Returns all the datasets corresponding to the query, sorted by popularity'
+  c.summary = '$ hunter search <keyword> <geo-coverage> <temporal-coverage>
+                             * Returns all the datasets corresponding to
+                               the query, sorted by popularity.
+                             * WARNING: this command is going to be modified soon!'.colorize(:blue)
   c.description = c.summary
   c.example 'Search open data for population', 'hunter search population'
   c.action do |args, options|
@@ -116,7 +124,11 @@ end
 
 command :about do |c|
   c.syntax = 'hunter about'
-  c.summary = 'About Hunter'
+  c.summary = 'About Hunter
+                             * Vision
+                             * Value Proposition
+                             * Stats
+                             * Last datasets indexed'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
     puts "
@@ -147,3 +159,23 @@ $.........:8...............888888888888.
     Datahunter.print_feedback_request
   end
 end
+
+command :guide do |c|
+  c.action {puts ('$ hunter find <keyword> <geo-coverage> <temporal-coverage> '.colorize(:blue) +
+                  '
+* Returns the 3 most popular (most reused, viewed, etc) datasets corresponding to the query
+* Allow you to either download the dataset or to open your favorite browser directly at the good page')
+
+puts ('$ hunter search <keyword> <geo-coverage> <temporal-coverage>'.colorize(:blue) +
+      '
+* Returns all the datasets corresponding to the query, sorted by popularity.
+* WARNING: this command is going to be modified soon!')
+
+puts ('$ hunter about'.colorize(:blue) +
+'
+* Vision
+* Value Proposition
+* Stats
+* Last datasets indexed')}
+end
+default_command :guide
