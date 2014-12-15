@@ -45,9 +45,9 @@ module Datahunter
     else
       Datahunter.print_downloadable_links resources
       dl = ask "### which one? (0/1/...)".colorize(:yellow)
-      dl = dl.to_i
     end
 
+    dl = dl.to_i
     Datahunter.download_file (resources[dl]["url"], resources[dl]["format"])
   end
 
