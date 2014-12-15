@@ -37,7 +37,7 @@ module Datahunter
   end
  
   def self.download_the_data dataset
-    number_of_downloadable_links = dataset["resources"]
+    number_of_downloadable_links = dataset["resources"].size
     if number_of_downloadable_links == 1
       Datahunter.download_file dataset["resources"][0]["url"]
     else
