@@ -131,9 +131,7 @@ command :about do |c|
                              * Last datasets indexed'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
-    puts "
-...........888888888888888..............
-........8888888888888888888888..........
+    puts "........8888888888888888888888..........
 .....88888888888888888888888888888......
 ....8888888888888888888888888888888.....
 ...888888888888888888888888888~88888?...
@@ -155,7 +153,16 @@ $.........:8...............888888888888.
 ... .........................888........
 ....  .....................:88..........
 .....      ...............8.............".colorize(:red)
-    puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets research better!".colorize(:blue)
+    puts
+    puts 'Find and download Open Datasets directly from the terminal!'.colorize(:red)
+    puts 
+    puts 'We believe there will be more and more data available on the web and the main issue will be to find them and to manage each sources. So we try to do it for you: not by pre-processing them but by orienting you.'.colorize(:red)
+    puts
+    puts 'Number of datasets currently indexed: 1920'  
+    puts
+    puts 'Last dataset indexed: "India Power Sector Review"'
+    puts
+    puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets workflow better!".colorize(:blue)
     Datahunter.print_feedback_request
   end
 end
