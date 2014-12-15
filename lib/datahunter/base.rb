@@ -48,7 +48,7 @@ module Datahunter
       dl = dl.to_i
     end
 
-    Datahunter.download_file resources[dl]["url"] resources[dl]["format"]
+    Datahunter.download_file (resources[dl]["url"], resources[dl]["format"])
   end
 
 ## Messages: feedback and excuses
