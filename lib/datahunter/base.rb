@@ -39,15 +39,15 @@ module Datahunter
   def self.download_the_data dataset
     number_of_downloadable_links = dataset["resources"]
     if number_of_downloadable_links == 1
-      download_file dataset["resources"][0]["url"]
+      Datahunter.download_file dataset["resources"][0]["url"]
     else
-      print_downloadable_links dataset
+      Datahunter.print_downloadable_links dataset
       dl = ask "### which one? (0/1/...)".colorize(:yellow)
       dl = case dl.to_i
            when dl >= number_of_downloadable_links 
              dl = ask "### I'm sorry, which one? (0/1/...)".colorize(:yellow)
            else
-             download_file dataset["resources"][dl]["url"]
+             Datahunter.download_file dataset["resources"][dl]["url"]
            end
     end
   end
@@ -71,7 +71,7 @@ module Datahunter
 
   private
   
-  def print_downloadable_links dataset
+  def self.print_downloadable_links dataset
     dataset["resources"].each_with_index do |dl, i|
       puts ("#{i}. ".colorize(:yellow) +
             "#{dl["title"]} - ".colorize(:blue) + 
@@ -79,7 +79,7 @@ module Datahunter
     end
   end
   
-  def download_file dataset
+  def self.download_file dataset
     if dataset["resources"][dl]["format"] == "HTML"
       Launchy.open(dataset["resources"][dl]["url"], options = {})
     else
