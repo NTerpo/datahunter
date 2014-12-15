@@ -3,5 +3,19 @@
 require 'datahunter'
 require 'colorize'
 
-puts "usage: ".colorize(:red)
-puts "$ hunter find keyword [geo] [temp]".colorize(:blue)
+puts ('$ hunter find <keyword> <geo-coverage> <temporal-coverage> '.colorize(:blue) +
+                  '
+* Returns the 3 most popular (most reused, viewed, etc) datasets corresponding to the query
+* Allow you to either download the dataset or to open your favorite browser directly at the good page')
+
+puts ('$ hunter search <keyword> <geo-coverage> <temporal-coverage>'.colorize(:blue) +
+      '
+* Returns all the datasets corresponding to the query, sorted by popularity.
+* WARNING: this command is going to be modified soon!')
+
+puts ('$ hunter about'.colorize(:blue) +
+'
+* Vision
+* Value Proposition
+* Stats
+* Last datasets indexed')
