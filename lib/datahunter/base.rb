@@ -45,7 +45,7 @@ module Datahunter
       dl = ask "### which one? (0/1/...)".colorize(:yellow)
       dl = dl.to_i
       case dl
-      when >= number_of_downloadable_links 
+      when dl >= number_of_downloadable_links 
         dl = ask "### I'm sorry, which one? (0/1/...)".colorize(:yellow)
       else
         Datahunter.download_file dataset["resources"][dl]["url"]
