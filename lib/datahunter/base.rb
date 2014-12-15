@@ -37,15 +37,18 @@ module Datahunter
   end
  
   def self.download_the_data dataset
-    number_of_downloadable_links = dataset["resources"].size
+    resources = dataset["resources"]
+    number_of_downloadable_links = resources.size
+
     if number_of_downloadable_links == 1
-      Datahunter.download_file dataset["resources"][0]["url"]
+      dl = 0
     else
-      Datahunter.print_downloadable_links dataset
+      Datahunter.print_downloadable_links resources
       dl = ask "### which one? (0/1/...)".colorize(:yellow)
       dl = dl.to_i
-      Datahunter.download_file dataset["resources"][dl]["url"]
     end
+
+    Datahunter.download_file resources[dl]["url"] resources[dl]["format"]
   end
 
 ## Messages: feedback and excuses
@@ -67,20 +70,20 @@ module Datahunter
 
   private
   
-  def self.print_downloadable_links dataset
-    dataset["resources"].each_with_index do |dl, i|
+  def self.print_downloadable_links resources
+    resources.each_with_index do |dl, i|
       puts ("#{i}. ".colorize(:yellow) +
             "#{dl["title"]} - ".colorize(:blue) + 
             "#{dl["format"]}".colorize(:green))
     end
   end
   
-  def self.download_file dataset
-    if dataset["resources"][dl]["format"] == "HTML"
-      Launchy.open(dataset["resources"][dl]["url"], options = {})
+  def self.download_file url, format=""
+    if format == "HTML"
+      Launchy.open(url, options = {})
     else
       puts "Start downloading..."
-      Downloadr::HTTP.download(dataset["resources"][dl]["url"])
+      Downloadr::HTTP.download(url)
       puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
     end
   end
