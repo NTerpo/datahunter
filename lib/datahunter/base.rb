@@ -44,7 +44,8 @@ module Datahunter
       dl = 0
     else
       Datahunter.print_downloadable_links resources
-      dl = ask "### which one? (0/1/...)".colorize(:yellow)
+      dl = ask("### which one? (0/1/...)".colorize(:yellow), Integer)
+      {|i| i.in = 0..(number_of_downloadable_links - 1)}
     end
 
     dl = dl.to_i
