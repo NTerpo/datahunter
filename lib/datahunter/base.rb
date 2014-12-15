@@ -35,31 +35,24 @@ module Datahunter
     puts ("score: ".colorize(:green) + "#{dataset["huntscore"]}")
     puts
   end
-  
-  def self.print_downloadable_links dataset
-    dataset["resources"].each_with_index do |dl, i|
-      puts ("#{i}. ".colorize(:yellow) +
-            "#{dl["title"]} - ".colorize(:blue) + 
-            "#{dl["format"]}".colorize(:green))
-    end
-  end
-
-  def self.download_file url
-    puts "Start downloading..."
-    Downloadr::HTTP.download(url)
-    puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
-  end
-
+ 
   def self.download_the_data dataset
-    print_downloadable_links dataset
-    dl = ask "### which one? (0/1/...)".colorize(:yellow)
-    dl = dl.to_i
-    if dataset["resources"][dl]["format"] == "HTML"
-      Launchy.open(dataset["resources"][dl]["url"], options = {})
+    number_of_downloadable_links = dataset["resources"]
+    if number_of_downloadable_links == 1
+      download_file dataset["resources"][0]["url"]
     else
-      download_file dataset["resources"][dl]["url"]
+      print_downloadable_links dataset
+      dl = ask "### which one? (0/1/...)".colorize(:yellow)
+      dl = case dl.to_i
+           when dl >= number_of_downloadable_links 
+             dl = ask "### I'm sorry, which one? (0/1/...)".colorize(:yellow)
+           else
+             download_file dataset["resources"][dl]["url"]
+           end
     end
   end
+
+## Messages: feedback and excuses
 
   def self.print_feedback_request
     case ask "### give feedback? (y/n)".colorize(:yellow)
@@ -74,5 +67,25 @@ module Datahunter
     puts "Remember, this is a first prototype, there will surely be a lot more "\
          "datasets indexed soon. If you want us to find a dataset for you, or "\
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
+  end
+
+  private
+  
+  def print_downloadable_links dataset
+    dataset["resources"].each_with_index do |dl, i|
+      puts ("#{i}. ".colorize(:yellow) +
+            "#{dl["title"]} - ".colorize(:blue) + 
+            "#{dl["format"]}".colorize(:green))
+    end
+  end
+  
+  def download_file dataset
+    if dataset["resources"][dl]["format"] == "HTML"
+      Launchy.open(dataset["resources"][dl]["url"], options = {})
+    else
+      puts "Start downloading..."
+      Downloadr::HTTP.download(dataset["resources"][dl]["url"])
+      puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
+    end
   end
 end
