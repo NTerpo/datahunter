@@ -89,7 +89,7 @@ module Datahunter
     end
   end
 
-  def self.print_excuse_and_alternative_url_message alt-url=""
+  def self.print_excuse_and_alternative_url_message alt_url=""
     puts "If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:"
     puts "#{alt_url}".colorize(:blue)
   end
