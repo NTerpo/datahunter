@@ -48,7 +48,7 @@ module Datahunter
     end
 
     dl = dl.to_i
-    Datahunter.download_file(resources[dl]["url"], resources[dl]["format"])
+    Datahunter.download_file(resources[dl]["url"], resources[dl]["format"], dataset["uri"])
   end
 
 ## Messages: feedback and excuses
@@ -89,7 +89,7 @@ module Datahunter
     end
   end
 
-  def self.print_excuse_and_alternative_url_message alt-url
+  def self.print_excuse_and_alternative_url_message alt-url=""
     puts "If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:"
     puts "#{alt-url}".colorize(:blue)
   end
