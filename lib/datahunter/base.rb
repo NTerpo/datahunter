@@ -78,19 +78,19 @@ module Datahunter
     end
   end
   
-  def self.download_file url, format="", alt-url=""
+  def self.download_file url, format="", alt_url=""
     if format == "HTML"
       Launchy.open(url, options = {})
     else
       puts "Start downloading..."
       Downloadr::HTTP.download(url)
       puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
-      Datahunter.print_excuse_and_alternative_url_message alt-url
+      Datahunter.print_excuse_and_alternative_url_message alt_url
     end
   end
 
   def self.print_excuse_and_alternative_url_message alt-url=""
     puts "If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:"
-    puts "#{alt-url}".colorize(:blue)
+    puts "#{alt_url}".colorize(:blue)
   end
 end
