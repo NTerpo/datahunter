@@ -72,7 +72,7 @@ command :find do |c|
               end
             end
           end
-        when 500
+        when 204
           puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
           Datahunter.print_excuse_message
           Datahunter.print_feedback_request
