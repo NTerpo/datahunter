@@ -6,7 +6,12 @@
 
 [![Gem Version](https://badge.fury.io/rb/datahunter.svg)](http://badge.fury.io/rb/datahunter) [![Build Status](https://travis-ci.org/NTerpo/datahunter.svg?branch=master)](https://travis-ci.org/NTerpo/datahunter)
 
-We believe there will be more and more data available on the web and the main issue will be to find them and to manage each sources. So we try to do it for you: not by pre-processing them but by orienting you. 
+**Hunter allows you to find and download open datasets quickly and easily from your terminal**. We work hard to index and sort the most useful datasets available for you!
+
+In a world where there are more and more data publishers and data users, the research of those data is still a pain.
+Our aim with Hunter is to help publishers seeing their data reused and to help data users to find them quicker than ever and to handle them easily.
+
+We believe that pre-processing data is a bad idea and that hosting them could create problems for data users. We just want to show you the way to the data you want as faster as possible!
 
 
 ## Installation
