@@ -67,6 +67,7 @@ command :find do |c|
               end
               if index >= 2 or datasets[index+1].nil?
                 Datahunter.print_excuse_message
+                Datahunter.print_request_dataset_message
                 Datahunter.print_feedback_request
                 break
               end
@@ -74,8 +75,7 @@ command :find do |c|
           end
         when 204
           puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
-          Datahunter.print_excuse_message
-          Datahunter.print_feedback_request
+          Datahunter.print_request_dataset_message
         else
           response.return!(request, result, &block)
         end

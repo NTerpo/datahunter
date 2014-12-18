@@ -8,6 +8,7 @@ module Datahunter
 #  DATASETS_URL = "http://localhost:3000/api/datasets/"
   DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
   FEEDBACK_URL = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
+  REQUEST_URL = "https://docs.google.com/forms/d/1NRKWmb_mcpKJmrutXvZSZnysM_v0rfLhjD897H3Myrw/viewform?usp=send_form"
 
   def self.datasets_url tag, geo=nil, temp=nil
     tag = tag.downcase.split.first if tag
@@ -62,6 +63,15 @@ module Datahunter
     end
   end
 
+  def self.print_request_dataset_message
+    case ask "### request a dataset? (y/n)".colorize(:yellow)
+    when 'y'
+      Launchy.open(REQUEST_URL, options = {})
+    else
+      puts "Bye for now!"
+    end
+  end
+  
   def self.print_excuse_message
     puts "Remember, this is a first prototype, there will surely be a lot more "\
          "datasets indexed soon. If you want us to find a dataset for you, or "\
