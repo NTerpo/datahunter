@@ -108,9 +108,16 @@ command :search do |c|
         puts "### Response in #{elapsed_time} seconds".colorize(:blue)
         puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
         puts
-        datasets.each do |result|
-          puts ("#{result["title"]}".colorize(:green) + " (#{result["_id"]})")
+        datasets.each_with_index do |result, i|
+          puts ("#{i}. ".colorize(:yellow) +
+                "#{result["title"]}".colorize(:green) +
+                " id: #{result["_id"]}")
         end
+        puts
+        puts ("You can get more info about a dataset with " +
+              "$ hunter info <id>".colorize(:blue))
+        puts ("You can download directly a dataset with " +
+             "$ hunter download <id>".colorize(:blue))
       when 500
         puts "We found nothing for your query: as every good hunter... we are still learning".colorize(:red)
         Datahunter.print_excuse_message
@@ -121,6 +128,8 @@ command :search do |c|
     end
   end
 end
+
+
 
 command :about do |c|
   c.syntax = 'hunter about'
