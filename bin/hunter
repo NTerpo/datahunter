@@ -109,7 +109,7 @@ command :search do |c|
         puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
         puts
         datasets.each do |result|
-          puts ("#{result["title"]}".colorize(:green) + " (#{result["uri"]})")
+          puts ("#{result["title"]}".colorize(:green) + " (#{result["_id"]})")
         end
       when 500
         puts "We found nothing for your query: as every good hunter... we are still learning".colorize(:red)
