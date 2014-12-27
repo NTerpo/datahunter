@@ -129,7 +129,25 @@ command :search do |c|
   end
 end
 
+command :info do |c|
+  c.syntax = 'hunter info <id>'
+  c.summary = 'Get informations about a dataset from its ID'.colorize(:blue)
+  c.description = c.summary
+  c.action do |args, options|
 
+    url = Datahunter.ds_url(args[0])
+
+    response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
+
+      ds = JSON.parse(response.body)
+      case response.code
+      when 200
+        Datahunter.print_dataset_info ds
+      when 500 # TOFIX 
+      end
+    end
+  end
+end
 
 command :about do |c|
   c.syntax = 'hunter about'
