@@ -108,15 +108,75 @@ command :search do |c|
         puts "### Response in #{elapsed_time} seconds".colorize(:blue)
         puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
         puts
-        datasets.each do |result|
-          puts ("#{result["title"]}".colorize(:green) + " (#{result["uri"]})")
+        datasets.each_with_index do |result, i|
+          puts ("#{i}. ".colorize(:yellow) +
+                "#{result["title"]}".colorize(:green) +
+                " id: #{result["_id"]}")
         end
-      when 500
+        puts
+        puts ("You can get more informations about a dataset with " +
+              "$ hunter info <id>".colorize(:blue))
+        puts ("You can download directly a dataset with " +
+             "$ hunter get <id>".colorize(:blue))
+      when 204
         puts "We found nothing for your query: as every good hunter... we are still learning".colorize(:red)
         Datahunter.print_excuse_message
         Datahunter.print_feedback_request
       else
         response.return!(request, result, &block)
+      end
+    end
+  end
+end
+
+command :info do |c|
+  c.syntax = 'hunter info <id>'
+  c.summary = 'Get informations about a dataset from its ID'.colorize(:blue)
+  c.description = c.summary
+  c.action do |args, options|
+
+    if args[0].nil?
+      puts "usage: $ hunter info <id>"
+    else
+      url = Datahunter.ds_url(args[0])
+
+      response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
+
+        case response.code
+        when 200
+          ds = JSON.parse(response.body)
+          puts
+          Datahunter.print_dataset_info ds
+        when 500
+          puts "Invalid ID".colorize(:red)
+        end
+      end
+    end
+  end
+end
+
+command :get do |c|
+  c.syntax = 'hunter get <id>'
+  c.summary =
+    'Get a dataset (direct download if possible, web page if not) from its ID'.colorize(:blue)
+  c.description = c.summary
+  c.action do |args, options|
+
+    if args[0].nil?
+      puts "usage: $ hunter get id"
+    else
+      url = Datahunter.ds_url(args[0])
+      
+      response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
+        
+        case response.code
+        when 200
+          ds = JSON.parse(response.body)
+          puts
+          Datahunter.download_the_data ds
+        when 500
+          puts "Invalid ID".colorize(:red)
+        end
       end
     end
   end

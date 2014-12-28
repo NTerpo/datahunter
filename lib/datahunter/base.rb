@@ -25,6 +25,10 @@ module Datahunter
     end
   end
 
+  def self.ds_url id
+    "#{DATASETS_URL}#{id}"    
+  end
+
   def self.print_dataset_info dataset
     puts ("title: ".colorize(:green) + "#{dataset["title"]}")
     puts ("description: ".colorize(:green) + "#{dataset["description"]}")
