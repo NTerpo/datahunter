@@ -74,7 +74,10 @@ command :find do |c|
             end
           end
         when 204
-          puts "We've found nothing for your query: as every good hunter... we are still learning".colorize(:red)
+          puts "We've found nothing for your query. "\
+               "Remember, this is a first prototype, there will be a lot more "\
+               "datasets indexed soon. If you want us to find a dataset for you, or "\
+               "if you just want to give us a feedback, don't hesitate!".colorize(:red)
           Datahunter.print_request_dataset_message
         else
           response.return!(request, result, &block)
