@@ -20,84 +20,83 @@ We believe that pre-processing data is a bad idea and that hosting them could cr
 
 ## Usage
 
-### Example1. $ hunter find ~> download
+### $ hunter find
 
-    $ hunter find alimentaires
-    ### Response in 0.430501 seconds
+    $ hunter find consumer
+    ### Response in 0.783677 seconds
     ### Looks like we've got something for you!
-
-    title: Produits alimentaires : ingrédients, nutrition, labels
-
-    description: [Open Food Facts](http://fr.openfoodfacts.org/) répertorie les informations sur les produits alimentaires : ingrédients, informations nutritionnelles, labels etc. Les données proviennent majoritairement de la collecte citoyenne (crowdsourcing) des informations.
-
-    publisher: Open Food Facts
-
-    temporal: all
-
-    spatial: ["france", "fr", "europe", "schengen", "eu", "ue", "countries", "world", "all"]
-
-    created: 2014-05-07T02:44:58.119Z
-
-    updated: 2014-12-13T16:40:14.136Z
     
-    score: 13.427
-
+    title: Consumer Complaint Database
+    description: These are complaints we’ve received about financial products and services.
+    publisher: Consumer Financial Protection Bureau
+    temporal: ["2011", "2012", "2013"]
+    spatial: ["us", "usa", "america", "united states", "united-states", "united states of america", "united-states-of-america", "world", "countries", "all"]
+    created: 2014-02-25T18:48:25.192Z
+    updated: 2014-02-25T23:48:24.897Z
+    score: 20.743
+    
     ### get the data? (y/n)
     y
-
-    0. Ingrédients, informations nutritionnelles et données sur les produits alimentaires - CSV
-    1. Ingrédients, informations nutritionnelles et données sur les produits alimentaires - RDF
-    2. Description des données, exports et API de la base de produits Open Food Facts - HTML
-
+    0. Consumer Complaint Database - CSV
+    1. Consumer Complaint Database - JSON
+    2. Consumer Complaint Database - XML
     ### which one? (0/1/...)
     0
-
     Start downloading...
     Your file has been downloaded, try to $ ls ;D
-
-### Example2. $ hunter find ~> open browser
-    $ hunter find population france
-    ### Response in 0.569162 seconds
-    ### Looks like we've got something for you!
-
-    title: Population
-
-    description: Ce jeu de données permet d'accéder aux résultats des recensements de la population, à des séries chronologiques de la Banque de Données Macro-économiques de l'Insee sur le thème de la population et à d'autres données issues notamment des statistiques de l'état civil. Le recensement de la population permet de connaître la diversité et l'évolution de la population de la France. L'Insee fournit ainsi des statistiques sur les habitants et les logements, leur nombre et leurs caractéristiques : répartition par sexe et âge, professions, diplômes-formation, conditions de logement, modes de transport, déplacements domicile-travail, etc. La BDM est la principale base de données de séries et indices sur l'ensemble des domaines économiques et sociaux.
-
-    publisher: Institut National de la Statistique et des Etudes Economiques (INSEE)
-
-    temporal: ["1962", "1963", "1964", "1965", "1966", "1967", "1968", "1969", "1970", "1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
-
-    spatial: ["france", "fr", "europe", "schengen", "eu", "ue", "countries", "world", "all"]
-
-    created: 2014-05-07T02:40:14.478Z
-
-    updated: 2014-11-07T01:32:48.201Z
-
-    score: 25.893
-
-    ### get the data? (y/n)
-    => y: open your favorite browser at the page where you'll be able to preview and download the data
-    => n: suggest the next most popular dataset corresponding to the query
+    If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:
+    https://data.consumerfinance.gov/api/views/x94z-ydhh/rows.csv?accessType=DOWNLOAD
 
 ![usage](./hunter.gif)
 
 ### $ hunter search
 
-    $ hunter search paris
-    ### Response in 0.281749 seconds
-    ### We've found 5 datasets corresponding to your query paris:
+    $ hunter search consumer
+    ### Response in 0.402504 seconds
+    ### We've found 12 datasets corresponding to your query consumer:
 
-    Vélib' - Paris et communes limitrophes (https://www.data.gouv.fr/fr/datasets/velib-paris-et-communes-limitrophes-idf/)
+    - Consumer Complaint Database id: 548c82a7a826dfe85070e5fa
+    - Consumer Expenditure Survey id: 548c82a9a826dfe85070e607
+    - Farmers Markets Geographic Data id: 548c82aaa826dfe85070e60e
+    - Food Price Outlook id: 548c82aba826dfe85070e624
+    - Consumer Price Index id: 548c82fca826dfe85070e79f
+    - Foreign Labor Statistics id: 548c82ada826dfe85070e663
+    - Farmers Markets Search id: 548c82b1a826dfe85070e6f2
+    - International Macroeconomic Data Set id: 548c8301a826dfe85070e84e
+    - Consumer Expenditure Survey id: 548c82fba826dfe85070e782
+    - Consumer Price Indexes - Base id: 548c82fca826dfe85070e7b5
+    - Consumer Price Index - Department Store Inventory Price Index id: 548c82fea826dfe85070e7f4
+    - Southeast Information Office id: 548c8305a826dfe85070e8cf
+    
+    You can get more informations about a dataset with $ hunter info <id>
+    You can download directly a dataset with $ hunter get <id>
+    
+### $ hunter info
 
-    Liste des sites des hotspots Paris WiFi (https://www.data.gouv.fr/fr/datasets/liste-des-sites-des-hotspots-paris-wifi-prs/)
+    $ hunter info 548c82a7a826dfe85070e5fa
+    
+    title: Consumer Complaint Database
+    description: These are complaints we’ve received about financial products and services.
+    publisher: Consumer Financial Protection Bureau
+    temporal: ["2011", "2012", "2013"]
+    spatial: ["us", "usa", "america", "united states", "united-states", "united states of america", "united-states-of-america", "world", "countries", "all"]
+    created: 2014-02-25T18:48:25.192Z
+    updated: 2014-02-25T23:48:24.897Z
+    score: 20.743
+    
+### $ hunter get 
 
-    Liste des casernes à Paris et dans les départements de la petite couronne (https://www.data.gouv.fr/fr/datasets/liste-des-casernes-a-paris-et-dans-les-departements-de-la-petite-couronne-551678/)
-
-    Points d'accueil police (coordonnées) - Paris (https://www.data.gouv.fr/fr/datasets/points-d-accueil-police-coordonnees-paris-30379560/)
-
-    Lieux de tournage de films (long métrage) (https://www.data.gouv.fr/fr/datasets/lieux-de-tournage-de-films-long-metrage-prs/)
-
+    $ hunter get 548c82a7a826dfe85070e5fa
+    
+    0. Consumer Complaint Database - CSV
+    1. Consumer Complaint Database - JSON
+    2. Consumer Complaint Database - XML
+    ### which one? (0/1/...)
+    1
+    Start downloading...
+    Your file has been downloaded, try to $ ls ;D
+    If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:
+    https://data.consumerfinance.gov/api/views/x94z-ydhh/rows.csv?accessType=DOWNLOAD
 
 ## Feedbacks
 Don't hesitate to [give us any feedback about you experience with Hunter!](https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform?usp=send_form)

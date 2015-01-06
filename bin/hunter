@@ -111,10 +111,11 @@ command :search do |c|
         puts "### Response in #{elapsed_time} seconds".colorize(:blue)
         puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
         puts
-        datasets.each_with_index do |result, i|
-          puts ("#{i}. ".colorize(:yellow) +
+        datasets.each do |result|
+          puts ("- ".colorize(:yellow) +
                 "#{result["title"]}".colorize(:green) +
-                " id: #{result["_id"]}")
+                " id: ".colorize(:blue) +
+                "#{result["_id"]}")
         end
         puts
         puts ("You can get more informations about a dataset with " +
