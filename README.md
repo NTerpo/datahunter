@@ -6,7 +6,9 @@
 
 [![Gem Version](https://badge.fury.io/rb/datahunter.svg)](http://badge.fury.io/rb/datahunter) [![Build Status](https://travis-ci.org/NTerpo/datahunter.svg?branch=master)](https://travis-ci.org/NTerpo/datahunter)
 
-**Hunter allows you to find and download open datasets quickly and easily from your terminal**. We work hard to index and sort the most useful datasets available for you!
+**Hunter allows you to find and download open datasets quickly and easily from your terminal**.
+
+We work hard to index and sort the most useful datasets available for you!
 
 In a world where there are more and more data publishers and data users, the research of those data is still a pain.
 Our aim with Hunter is to help publishers seeing their data reused and to help data users to find them quicker than ever and to handle them easily.
