@@ -71,8 +71,6 @@ module Datahunter
     case ask "### request a dataset? (y/n)".colorize(:yellow)
     when 'y'
       Launchy.open(REQUEST_URL, options = {})
-    else
-      puts "Bye for now!"
     end
   end
   

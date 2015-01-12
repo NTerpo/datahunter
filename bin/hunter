@@ -65,7 +65,7 @@ command :find do |c|
               if index == 2
                 puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{args[0].downcase}'".colorize(:blue))
               end
-              if index >= 2 or datasets[index+1].nil?
+              if index > 2 or datasets[index+1].nil?
                 Datahunter.print_excuse_message
                 Datahunter.print_request_dataset_message
                 Datahunter.print_feedback_request
