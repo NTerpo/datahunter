@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["nicolas.terpolilli@gmail.com"]
   spec.summary       = %q{A Command Line Interface to find Open Datasets}
   spec.description   = %q{Command line interface to find open datasets via the Hunter API}
-  spec.homepage      = "https://github.com/NTerpo/datahunter"
+  spec.homepage      = "http://get-hunter.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
