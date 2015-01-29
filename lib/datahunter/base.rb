@@ -3,8 +3,6 @@ require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
 
-require 'easy_downloader'
-
 module Datahunter
 
 #  DATASETS_URL = "http://localhost:3000/api/datasets/"
