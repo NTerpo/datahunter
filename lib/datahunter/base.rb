@@ -80,7 +80,7 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
-  def self.dl_file url, path="~/Download/foo.json"
+  def self.dl_file url, path="/Download/"
     Downloadr::HTTP.download(url)
   end
 
