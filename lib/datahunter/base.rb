@@ -2,6 +2,7 @@ require 'colorize'
 require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
+require 'Pathname'
 
 module Datahunter
 
@@ -80,7 +81,9 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
-  def self.dl_file url, path = "./Downloads/fo.json"
+  def self.dl_file url, path = ""
+    pwd = Dir.getwd
+    puts pwd
     Downloadr::HTTP.download(url, path)
   end
 
