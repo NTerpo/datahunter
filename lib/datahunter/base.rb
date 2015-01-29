@@ -3,7 +3,7 @@ require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
 
-require 'download'
+require 'easy_downloader'
 
 module Datahunter
 
@@ -83,7 +83,7 @@ module Datahunter
   end
 
   def self.dl_file url, path=""
-    Download.file(url, path)
+    Downloadr::HTTP.download(url)
   end
 
   private
