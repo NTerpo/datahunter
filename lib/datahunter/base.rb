@@ -3,7 +3,7 @@ require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
 
-require 'mechanize-downloader'
+require 'download'
 
 module Datahunter
 
@@ -82,9 +82,8 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
-  def self.dl_file url, path="~/foo/bar.json"
-    Mechanize.new {|agent|
-      agent.download(url, path)}
+  def self.dl_file url, path=""
+    Download.file(url, path)
   end
 
   private
