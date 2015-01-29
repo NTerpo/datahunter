@@ -179,7 +179,6 @@ command :get do |c|
           if ds.has_key?("resources")
             Datahunter.download_the_data ds
           else
-            puts "You can't download this dataset directly, but you should from there"
             Datahunter.open_in_browser ds["uri"]
           end
         when 500
