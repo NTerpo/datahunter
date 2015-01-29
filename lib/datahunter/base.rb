@@ -3,7 +3,7 @@ require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
 
-require 'MDownloader'
+require 'mechanize-downloader'
 
 module Datahunter
 
@@ -82,21 +82,9 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
-  def self.dl_file url, path=""
-    options = Hash.new
-    options[:retry] = :any
-    options[:resume] = true
-    
-    result, error = MDownloader.download(url, path, options) do |report|
-      puts "Progress:#{report[:percent]}% Lave:#{report[:min]}m#{report[:sec]}"
-    end
-
-    if result
-      puts 'Download Finished!'
-    else
-      puts 'Download Error!'
-      puts error
-    end
+  def self.dl_file url, path="~/foo/bar.json"
+    Mechanize.new {|agent|
+      agent.download(url, path)}
   end
 
   private
