@@ -10,7 +10,7 @@ require 'colorize'
 require 'downloadr'
 
 program :version, Datahunter::VERSION
-program :description, 'Find and download Open Datasets directly from your terminal'
+program :description, 'Find an download Open Datasets directly from your terminal'
 program :help_formatter, :compact
 
 command :find do |c|
@@ -53,11 +53,10 @@ command :find do |c|
             
             case ask "### get the data? (y/n)".colorize(:yellow)
             when 'y'
-              if datasets[index]["resources"].any?
+              if datasets[index].has_key?("resources")
                 Datahunter.download_the_data datasets[index]
               else
-                puts "You can't download this dataset directly, but you should from there"
-                Launchy.open(datasets[index]["uri"], options = {})
+                Datahunter.open_in_browser datasets[index]["uri"]
               end
               break
            
@@ -177,11 +176,11 @@ command :get do |c|
         when 200
           ds = JSON.parse(response.body)
           puts
-          if datasets[index]["resources"].any?
-                Datahunter.download_the_data ds
+          if ds.has_key?("resources")
+            Datahunter.download_the_data ds
           else
             puts "You can't download this dataset directly, but you should from there"
-            Launchy.open(datasets[index]["uri"], options = {})
+            Datahunter.open_in_browser ds["uri"]
           end
         when 500
           puts "Invalid ID".colorize(:red)

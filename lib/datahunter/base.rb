@@ -56,6 +56,15 @@ module Datahunter
     Datahunter.download_file(resources[dl]["url"], resources[dl]["format"], dataset["uri"])
   end
 
+  def self.open_in_browser url
+    if url =~ /\A#{URI::regexp}\z/
+      puts "You can't download this dataset directly, but you should from there"
+      Launchy.open(url, options = {})
+    else
+      Datahunter.print_bad_uri_message
+    end
+  end
+
 ## Messages: feedback and excuses
 
   def self.print_feedback_request
@@ -78,6 +87,11 @@ module Datahunter
     puts "Remember, this is a first prototype, there will surely be a lot more "\
          "datasets indexed soon. If you want us to find a dataset for you, or "\
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
+  end
+
+  def self.print_bad_uri_message
+    puts "The URL given by the publisher is not valid. We'll try to find out why "\
+         "as soon as we can!".colorize(:red)
   end
 
   private
