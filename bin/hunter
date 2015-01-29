@@ -177,7 +177,12 @@ command :get do |c|
         when 200
           ds = JSON.parse(response.body)
           puts
-          Datahunter.download_the_data ds
+          if datasets[index]["resources"].any?
+                Datahunter.download_the_data ds
+          else
+            puts "You can't download this dataset directly, but you should from there"
+            Launchy.open(datasets[index]["uri"], options = {})
+          end
         when 500
           puts "Invalid ID".colorize(:red)
         end
