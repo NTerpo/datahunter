@@ -3,6 +3,8 @@ require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
 
+require 'MDownloader'
+
 module Datahunter
 
 #  DATASETS_URL = "http://localhost:3000/api/datasets/"
@@ -80,6 +82,23 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
+  def self.dl_file url, path=""
+    options = Hash.new
+    options[:retry] = :any
+    options[:resume] = true
+    
+    result, error = MDownloader.download(url, path, options) do |report|
+      puts "Progress:#{report[:percent]}% Lave:#{report[:min]}m#{report[:sec]}"
+    end
+
+    if result
+      puts 'Download Finished!'
+    else
+      puts 'Download Error!'
+      puts error
+    end
+  end
+
   private
   
   def self.print_downloadable_links resources
@@ -95,7 +114,8 @@ module Datahunter
       Launchy.open(url, options = {})
     else
       puts "Start downloading..."
-      Downloadr::HTTP.download(url)
+      
+      # Downloadr::HTTP.download(url)
       puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
       Datahunter.print_excuse_and_alternative_url_message alt_url
     end
