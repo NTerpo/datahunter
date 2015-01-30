@@ -93,7 +93,7 @@ module Datahunter
   def self.dl_file url, path=""
     location = Dir.pwd
     uri = Addressable::URI.parse(url)
-    file_name = url.basename
+    file_name = uri.basename
     # Downloadr::HTTP.download(url)
     puts location + file_name
   end
