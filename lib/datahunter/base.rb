@@ -97,9 +97,9 @@ module Datahunter
     # Downloadr::HTTP.download(url)
     loc = location + "/" + file_name
 
-    case ask ("Create/overwrite #{loc} ? (y/rename)")
+    case ask ("Create/overwrite #{loc} ? (y/rename)".colorize(:yellow)
     when 'rename'
-      new_location = ask "Path/to/file: "
+      new_location = ask "Path/to/filename: ".colorize(:yellow)
     end       
     
   end
