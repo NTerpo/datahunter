@@ -253,8 +253,3 @@ puts ('$ hunter about'.colorize(:blue) +
 * Last datasets indexed')}
 end
 default_command :guide
-
-
-command :foo do |c|
-  c.action { Datahunter.dl_file "http://data.consumerfinance.gov/api/views.json"}
-end

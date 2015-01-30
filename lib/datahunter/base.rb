@@ -90,22 +90,6 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
-  def self.dl_file url, path=""
-    location = Dir.pwd
-    uri = Addressable::URI.parse(url)
-    file_name = uri.basename
-    # Downloadr::HTTP.download(url)
-    loc = location + "/" + file_name
-
-    case ask ("Create/overwrite #{loc} ? (y/rename)".colorize(:yellow))
-    when 'rename'
-      loc = ask "Path/to/filename: ".colorize(:yellow)
-    end
-
-    Downloadr::HTTP.download(url, loc)
-    
-  end
-
   def self.print_bad_uri_message
     puts "The URL given by the publisher is not valid. We'll try to find out why "\
          "as soon as we can!".colorize(:red)
@@ -125,10 +109,19 @@ module Datahunter
     if format == "HTML"
       Launchy.open(url, options = {})
     else
+      location = Dir.pwd
+      uri = Addressable::URI.parse(url)
+      file_name = uri.basename
+      loc = location + "/" + file_name
+
+      case ask ("Create/overwrite #{loc} ? (y/rename)".colorize(:yellow))
+      when 'rename'
+        loc = ask "Path/to/filename: ".colorize(:yellow)
+      end
+
       puts "Start downloading..."
-      
-      # Downloadr::HTTP.download(url)
-      puts "Your file has been downloaded, try to $ ls ;D".colorize(:green)
+      Downloadr::HTTP.download(url, loc)
+      puts "Your file has been downloaded ;)".colorize(:green)
       Datahunter.print_excuse_and_alternative_url_message alt_url
     end
   end
