@@ -91,8 +91,8 @@ module Datahunter
   end
 
   def self.dl_file url, path = ""
-    pwd = Dir.getwd
-    puts pwd
+    # pwd = Dir.getwd
+    # puts pwd
     Downloadr::HTTP.download(url, path)
   end
 
