@@ -95,7 +95,12 @@ module Datahunter
     uri = Addressable::URI.parse(url)
     file_name = uri.basename
     # Downloadr::HTTP.download(url)
-    puts location + "/" + file_name
+    loc = location + "/" + file_name
+
+    case ask ("### Create/Overwrite ".colorize(:yellow) + loc +"? (y/rename)".colorize(:yellow)
+             
+               
+    
   end
 
   def self.print_bad_uri_message
