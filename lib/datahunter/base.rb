@@ -90,10 +90,11 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
-  def self.dl_file url, path = ""
+  def self.dl_file url, path=""
     # pwd = Dir.getwd
     # puts pwd
-    Downloadr::HTTP.download(url, path)
+    # Downloadr::HTTP.download(url)
+    puts url
   end
 
   def self.print_bad_uri_message
