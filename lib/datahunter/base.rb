@@ -92,10 +92,10 @@ module Datahunter
 
   def self.dl_file url, path=""
     location = Dir.pwd
-    # pwd = Dir.getwd
-    # puts pwd
+    uri = Addressable::URI.parse(url)
+    file_name = url.basename
     # Downloadr::HTTP.download(url)
-    puts location
+    puts location + file_name
   end
 
   def self.print_bad_uri_message
