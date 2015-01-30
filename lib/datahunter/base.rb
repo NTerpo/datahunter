@@ -118,13 +118,13 @@ module Datahunter
       when 'rename'
         loc = ask "Path/to/filename: ".colorize(:yellow)
       when 'n'
-        break
+        puts
+      else
+        puts "Start downloading..."
+        Downloadr::HTTP.download(url, loc)
+        puts "Your file has been downloaded ;)".colorize(:green)
+        Datahunter.print_excuse_and_alternative_url_message alt_url
       end
-
-      puts "Start downloading..."
-      Downloadr::HTTP.download(url, loc)
-      puts "Your file has been downloaded ;)".colorize(:green)
-      Datahunter.print_excuse_and_alternative_url_message alt_url
     end
   end
 
