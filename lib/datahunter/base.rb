@@ -2,7 +2,7 @@ require 'colorize'
 require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
-require 'Pathname'
+# require 'Pathname'
 
 module Datahunter
 
