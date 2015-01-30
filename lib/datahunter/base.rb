@@ -114,9 +114,11 @@ module Datahunter
       file_name = uri.basename
       loc = location + "/" + file_name
 
-      case ask ("Create/overwrite #{loc} ? (y/rename)".colorize(:yellow))
+      case ask ("Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
       when 'rename'
         loc = ask "Path/to/filename: ".colorize(:yellow)
+      when 'n'
+        break
       end
 
       puts "Start downloading..."
