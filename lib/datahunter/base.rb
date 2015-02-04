@@ -2,14 +2,16 @@ require 'colorize'
 require 'launchy'
 require 'downloadr'
 require 'addressable/uri'
-# require 'Pathname'
 
 module Datahunter
 
 #  DATASETS_URL = "http://localhost:3000/api/datasets/"
   DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
   FEEDBACK_URL = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
-  REQUEST_URL = "https://docs.google.com/forms/d/1NRKWmb_mcpKJmrutXvZSZnysM_v0rfLhjD897H3Myrw/viewform?usp=send_form"
+  REQUEST_URL =
+    "https://docs.google.com/forms/d/1NRKWmb_mcpKJmrutXvZSZnysM_v0rfLhjD897H3Myrw/viewform?usp=send_form"
+
+  @extensions = ["json", "csv", "xml"]
 
   def self.datasets_url tag, geo=nil, temp=nil
     tag = tag.downcase.split.first if tag
@@ -41,7 +43,44 @@ module Datahunter
     puts ("score: ".colorize(:green) + "#{dataset["huntscore"]}")
     puts
   end
- 
+  
+  def self.print_downloadable_links resources
+    resources.each_with_index do |dl, i|
+      puts ("#{i}. ".colorize(:yellow) +
+            "#{dl["title"]} - ".colorize(:blue) + 
+            "#{dl["format"]}".colorize(:green))
+    end
+  end
+
+  def parse_extension_from_uri uri
+    uri.basename.split(".").last
+  end
+  
+  def self.download_file url, format="", alt_url=""
+    uri = Addressable::URI.parse(url)
+    extension = parse_extension_from_uri uri
+
+    if !@extensions.include? extension
+      Launchy.open(url, options = {})
+    else
+      location = Dir.pwd
+      uri = Addressable::URI.parse(url)
+      file_name = uri.basename
+      loc = location + "/" + file_name
+
+      case ask ("Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
+      when 'rename'
+        loc = ask "Path/to/filename: ".colorize(:yellow)
+      when 'n'
+        abort("Ok then")
+      end
+      puts "Start downloading..."
+      Downloadr::HTTP.download(url, loc)
+      puts "Your file has been downloaded ;)".colorize(:green)
+      Datahunter.print_excuse_and_alternative_url_message alt_url
+    end
+  end
+
   def self.download_the_data dataset
     resources = dataset["resources"]
     number_of_downloadable_links = resources.size
@@ -52,11 +91,11 @@ module Datahunter
       Datahunter.print_downloadable_links resources
       dl = ask("### which one? (0/1/...)".colorize(:yellow), Integer) {|i| i.in = 0..(number_of_downloadable_links - 1)}
     end
-
+    
     dl = dl.to_i
     Datahunter.download_file(resources[dl]["url"], resources[dl]["format"], dataset["uri"])
   end
-
+  
   def self.open_in_browser url
     if url =~ /\A#{URI::regexp}\z/
       puts "You can't download this dataset directly, but you should from there"
@@ -90,45 +129,13 @@ module Datahunter
          "if you just want to give us a feedback, don't hesitate!".colorize(:red)
   end
 
-  def self.print_bad_uri_message
-    puts "The URL given by the publisher is not valid. We'll try to find out why "\
-         "as soon as we can!".colorize(:red)
-  end
-
-  private
-  
-  def self.print_downloadable_links resources
-    resources.each_with_index do |dl, i|
-      puts ("#{i}. ".colorize(:yellow) +
-            "#{dl["title"]} - ".colorize(:blue) + 
-            "#{dl["format"]}".colorize(:green))
-    end
-  end
-  
-  def self.download_file url, format="", alt_url=""
-    if format == "HTML"
-      Launchy.open(url, options = {})
-    else
-      location = Dir.pwd
-      uri = Addressable::URI.parse(url)
-      file_name = uri.basename
-      loc = location + "/" + file_name
-
-      case ask ("Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
-      when 'rename'
-        loc = ask "Path/to/filename: ".colorize(:yellow)
-      when 'n'
-        abort("Ok then")
-      end
-      puts "Start downloading..."
-      Downloadr::HTTP.download(url, loc)
-      puts "Your file has been downloaded ;)".colorize(:green)
-      Datahunter.print_excuse_and_alternative_url_message alt_url
-    end
-  end
-
   def self.print_excuse_and_alternative_url_message alt_url=""
     puts "If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:"
     puts "#{alt_url}".colorize(:blue)
+  end
+
+  def self.print_bad_uri_message
+    puts "The URL given by the publisher is not valid. We'll try to find out why "\
+         "as soon as we can!".colorize(:red)
   end
 end
