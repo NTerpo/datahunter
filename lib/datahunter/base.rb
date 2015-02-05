@@ -52,13 +52,13 @@ module Datahunter
     end
   end
 
-  def parse_extension_from_uri uri
+  def self.parse_extension_from_uri uri
     uri.basename.split(".").last
   end
   
   def self.download_file url, format="", alt_url=""
     uri = Addressable::URI.parse(url)
-    extension = parse_extension_from_uri uri
+    extension = Datahunter.parse_extension_from_uri uri
 
     if !@extensions.include? extension
       Launchy.open(url, options = {})
