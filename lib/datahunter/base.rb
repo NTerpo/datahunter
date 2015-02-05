@@ -11,7 +11,7 @@ module Datahunter
   REQUEST_URL =
     "https://docs.google.com/forms/d/1NRKWmb_mcpKJmrutXvZSZnysM_v0rfLhjD897H3Myrw/viewform?usp=send_form"
 
-  @extensions = ["json", "csv", "xml"]
+  @extensions = ["json", "csv", "xml", "zip", "gz", "xls", "xlsx", "tsv"]
 
   def self.datasets_url tag, geo=nil, temp=nil
     tag = tag.downcase.split.first if tag
