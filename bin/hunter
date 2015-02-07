@@ -53,7 +53,7 @@ command :find do |c|
             
             case ask "### get the data? (y/n)".colorize(:yellow)
             when 'y'
-              if datasets[index].has_key?("resources")
+              if datasets[index].has_key?("resources") and datasets[index]["resources"].any?
                 Datahunter.download_the_data datasets[index]
               else
                 Datahunter.open_in_browser datasets[index]["uri"]
