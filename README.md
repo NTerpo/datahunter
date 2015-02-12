@@ -95,13 +95,21 @@ We believe that pre-processing data is a bad idea and that hosting them could cr
     2. Consumer Complaint Database - XML
     ### which one? (0/1/...)
     1
+    Create/overwrite /Users/Terpolilli/views.json?(y/rename/n)
+    rename
+    Path/to/filename: /Users/Terpolilli/Downloads/consumer-data.json
     Start downloading...
-    Your file has been downloaded, try to $ ls ;D
+    Your file has been downloaded ;)
     If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:
     https://data.consumerfinance.gov/api/views/x94z-ydhh/rows.csv?accessType=DOWNLOAD
 
 ## Feedbacks
 Don't hesitate to [give us any feedback about you experience with Hunter!](https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform?usp=send_form)
+
+## Update
+
+* datasets indexed: 3195
+* last datasets indexed: DAMIR (french health data), homicides data, drugs/alcohol/alcoholism data, migration data + around 1300 datasets from data.gov.uk
 
 ## Roadmap
 
