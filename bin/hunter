@@ -225,9 +225,9 @@ $.........:8...............888888888888.
     puts 
     puts 'We believe there will be more and more data available on the web and the main issue will be to find them and to manage each sources. So we try to do it for you: not by pre-processing them but by orienting you.'.colorize(:red)
     puts
-    puts 'Number of datasets currently indexed: 1938'.colorize(:blue)  
+    puts 'Number of datasets currently indexed: 3195'.colorize(:blue)  
     puts
-    puts 'Last dataset indexed: "DAMIR: french health data, homicides data, drugs/alcohol/alcoholism data, migration data"'
+    puts 'Last dataset indexed: "DAMIR: french health data, homicides data, drugs/alcohol/alcoholism data, migration data + around 1300 datasets from data.gov.uk"'
     puts
     puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets workflow better!".colorize(:blue)
     Datahunter.print_feedback_request
