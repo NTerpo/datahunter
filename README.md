@@ -108,8 +108,8 @@ Don't hesitate to [give us any feedback about you experience with Hunter!](https
 
 ## Update
 
-* datasets indexed: 3195
-* last datasets indexed: DAMIR (french health data), homicides data, drugs/alcohol/alcoholism data, migration data + around 1300 datasets from data.gov.uk
+* datasets indexed: 6335
+* last datasets indexed: Canada open data
 
 ## Roadmap
 
