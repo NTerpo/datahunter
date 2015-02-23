@@ -108,8 +108,8 @@ Don't hesitate to [give us any feedback about you experience with Hunter!](https
 
 ## Update
 
-* datasets indexed: 6335
-* last datasets indexed: Canada open data
+* datasets indexed: 6835
+* last datasets indexed: Canada open data, NETL's Energy Data eXchange
 
 ## Roadmap
 
