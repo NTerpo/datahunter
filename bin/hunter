@@ -176,7 +176,7 @@ command :get do |c|
         when 200
           ds = JSON.parse(response.body)
           puts
-          if ds.has_key?("resources") and datasets[index]["resources"].any?
+          if ds.has_key?("resources") and ds["resources"].any?
             Datahunter.download_the_data ds
           else
             Datahunter.open_in_browser ds["uri"]
