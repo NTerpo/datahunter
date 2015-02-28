@@ -15,63 +15,44 @@ program :help_formatter, :compact
 
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = '$ hunter find <keyword> <geo-coverage> <temporal-coverage>
-                             * Returns the 3 most popular (most reused, viewed, etc)
-                               datasets corresponding to the triple keyword,
-                               spatial-coverage and temporal-coverage
-                             * Allow you to either download the dataset or to open
-                               your favorite browser directly at the good page'.colorize(:blue)
+  c.summary = '$ hunter find <keyword> <geo-coverage> <temporal-coverage>'.colorize(:blue)
   c.description = c.summary
   c.example 'Find open data for the U.S. population', 'hunter find population us'
   c.action do |args, options|
-
+    
     start_time = Time.now
 
     if args[0].nil?
       puts "usage: $ hunter find keyword [geo] [temp]"
     elsif
-      url = Datahunter.datasets_url(args[0], args[1], args[2])
 
+      url = Datahunter.datasets_url(args[0], args[1], args[2])
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
+
         elapsed_time = Time.now - start_time
 
         case response.code
         when 200
           datasets = JSON.parse(response.body).reverse
           puts "### Response in #{elapsed_time} seconds".colorize(:blue)
-          
-          messages = [
-            "### Looks like we've got something for you!".colorize(:blue),
-            "### And this one?".colorize(:blue),
-            "### Last try...".colorize(:blue)
-          ]
-          
-          3.times do |index|
-            puts messages[index]
-            puts
-            Datahunter.print_dataset_info datasets[index]
+          puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
+          puts
+
+          yo = datasets.take(10)
+          yo.each {|index|
+            puts ("- ".colorize(:yellow) +
+                  "#{index["title"]}".colorize(:green) +
+                  " id: ".colorize(:blue) +
+                  "#{index["_id"]}")
             
-            case ask "### get the data? (y/n)".colorize(:yellow)
-            when 'y'
-              if datasets[index].has_key?("resources") and datasets[index]["resources"].any?
-                Datahunter.download_the_data datasets[index]
-              else
-                Datahunter.open_in_browser datasets[index]["uri"]
-              end
-              break
-           
-            else # When no
-              if index == 2
-                puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{args[0].downcase}'".colorize(:blue))
-              end
-              if index > 2 or datasets[index+1].nil?
-                Datahunter.print_excuse_message
-                Datahunter.print_request_dataset_message
-                Datahunter.print_feedback_request
-                break
-              end
-            end
-          end
+            puts ("description: ".colorize(:blue) +
+                  "#{index["description"][0..80].gsub(/\w+\s*$/,'...')}")}
+
+
+
+
+
+
         when 204
           puts "We've found nothing for your query. "\
                "Remember, this is a first prototype, there will be a lot more "\
@@ -81,52 +62,6 @@ command :find do |c|
         else
           response.return!(request, result, &block)
         end
-      end
-    end
-  end
-end
-
-command :search do |c|
-  c.syntax = 'hunter search keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = '$ hunter search <keyword> <geo-coverage> <temporal-coverage>
-                             * Returns all the datasets corresponding to
-                               the query, sorted by popularity.
-                             * WARNING: this command is going to be modified soon!'.colorize(:blue)
-  c.description = c.summary
-  c.example 'Search open data for population', 'hunter search population'
-  c.action do |args, options|
-
-    start_time = Time.now
-
-    url = Datahunter.datasets_url(args[0], args[1], args[2])
-
-    response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
-
-      elapsed_time = Time.now - start_time
-
-      case response.code
-      when 200
-        datasets = JSON.parse(response.body).reverse
-        puts "### Response in #{elapsed_time} seconds".colorize(:blue)
-        puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
-        puts
-        datasets.each do |result|
-          puts ("- ".colorize(:yellow) +
-                "#{result["title"]}".colorize(:green) +
-                " id: ".colorize(:blue) +
-                "#{result["_id"]}")
-        end
-        puts
-        puts ("You can get more informations about a dataset with " +
-              "$ hunter info <id>".colorize(:blue))
-        puts ("You can download directly a dataset with " +
-             "$ hunter get <id>".colorize(:blue))
-      when 204
-        puts "We found nothing for your query: as every good hunter... we are still learning".colorize(:red)
-        Datahunter.print_excuse_message
-        Datahunter.print_feedback_request
-      else
-        response.return!(request, result, &block)
       end
     end
   end

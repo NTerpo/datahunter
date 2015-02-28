@@ -43,7 +43,10 @@ module Datahunter
     puts ("score: ".colorize(:green) + "#{dataset["huntscore"]}")
     puts
   end
+
   
+  
+
   def self.print_downloadable_links resources
     resources.each_with_index do |dl, i|
       puts ("#{i}. ".colorize(:yellow) +
