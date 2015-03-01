@@ -34,19 +34,37 @@ command :find do |c|
         case response.code
         when 200
           datasets = JSON.parse(response.body).reverse
+          number_of_datasets = datasets.length
+          
           puts "### Response in #{elapsed_time} seconds".colorize(:blue)
           puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
           puts
 
-          yo = datasets.take(10)
-          yo.each {|index|
-            puts ("- ".colorize(:yellow) +
-                  "#{index["title"]}".colorize(:green) +
-                  " id: ".colorize(:blue) +
-                  "#{index["_id"]}")
+          for i in 1..(number_of_datasets/5)
+            sub_datasets = datasets[(5 * i - 5) .. (5 * i - 1)]
+          
+            sub_datasets.each_with_index do |ds, index|
+              puts ("#{index+1}. ".colorize(:yellow) +
+                    "#{ds["title"]}".colorize(:green) +
+                    " id: ".colorize(:blue) +
+                    "#{ds["_id"]}")
+              puts ("#{ds["spatial"].take(5)}")
+              puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
+            end
+            puts
             
-            puts ("description: ".colorize(:blue) +
-                  "#{index["description"][0..80].gsub(/\w+\s*$/,'...')}")}
+            case ask "### GET A DATASET ? (1/..5), show next 5 datasets? (RET) or abort? (abort)".colorize(:yellow)
+            when '1' # TODO 1 .. 5
+              puts "foo" # TODO download dataset
+              break
+            when 'abort'
+              break
+            else
+              next
+            end
+          end
+          
+          
 
 
 
