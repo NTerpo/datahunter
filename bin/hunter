@@ -39,8 +39,8 @@ command :find do |c|
           puts "### Response in #{elapsed_time} seconds".colorize(:blue)
           puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
           puts
-
-          for i in 1..(number_of_datasets/5)
+          
+          for i in 1..(number_of_datasets/5 + 1)
             sub_datasets = datasets[(5 * i - 5) .. (5 * i - 1)]
           
             sub_datasets.each_with_index do |ds, index|
@@ -54,8 +54,40 @@ command :find do |c|
             puts
             
             case ask "### GET A DATASET ? (1/..5), show next 5 datasets? (RET) or abort? (abort)".colorize(:yellow)
-            when '1' # TODO 1 .. 5
-              puts "foo" # TODO download dataset
+            when '1'
+              if sub_datasets[0].has_key?("resources") and sub_datasets[0]["resources"].any?
+                Datahunter.download_the_data sub_datasets[0]
+              else
+                Datahunter.open_in_browser sub_datasets[0]["uri"]
+              end
+              break
+            when '2'
+              if sub_datasets[1].has_key?("resources") and sub_datasets[1]["resources"].any?
+                Datahunter.download_the_data sub_datasets[1]
+              else
+                Datahunter.open_in_browser sub_datasets[1]["uri"]
+              end
+              break
+            when '3'
+              if sub_datasets[2].has_key?("resources") and sub_datasets[2]["resources"].any?
+                Datahunter.download_the_data sub_datasets[2]
+              else
+                Datahunter.open_in_browser sub_datasets[2]["uri"]
+              end
+              break
+            when '4'
+              if sub_datasets[3].has_key?("resources") and sub_datasets[3]["resources"].any?
+                Datahunter.download_the_data sub_datasets[3]
+              else
+                Datahunter.open_in_browser sub_datasets[3]["uri"]
+              end
+              break
+            when '5'
+              if sub_datasets[4].has_key?("resources") and sub_datasets[4]["resources"].any?
+                Datahunter.download_the_data sub_datasets[4]
+              else
+                Datahunter.open_in_browser sub_datasets[4]["uri"]
+              end
               break
             when 'abort'
               break
@@ -63,14 +95,6 @@ command :find do |c|
               next
             end
           end
-          
-          
-
-
-
-
-
-
         when 204
           puts "We've found nothing for your query. "\
                "Remember, this is a first prototype, there will be a lot more "\
