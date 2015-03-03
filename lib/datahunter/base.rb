@@ -44,8 +44,17 @@ module Datahunter
     puts
   end
 
-  
-  
+  def self.print_coll_of_datasets_info_light coll_of_datasets
+    coll_of_datasets.each_with_index do |ds, index|
+      puts ("#{index+1}. ".colorize(:yellow) +
+            "#{ds["title"]}".colorize(:green) +
+            " id: ".colorize(:blue) +
+            "#{ds["_id"]}")
+      puts ("#{ds["spatial"].take(5)}")
+      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
+    end
+    puts
+  end
 
   def self.print_downloadable_links resources
     resources.each_with_index do |dl, i|
@@ -105,6 +114,14 @@ module Datahunter
       Launchy.open(url, options = {})
     else
       Datahunter.print_bad_uri_message
+    end
+  end
+
+  def self.get_dataset dataset
+    if dataset.has_key?("resources") and dataset["resources"].any?
+      Datahunter.download_the_data dataset
+    else
+      Datahunter.open_in_browser dataset["uri"]
     end
   end
 

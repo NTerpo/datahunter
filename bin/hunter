@@ -28,7 +28,6 @@ command :find do |c|
 
       url = Datahunter.datasets_url(args[0], args[1], args[2])
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
-
         elapsed_time = Time.now - start_time
 
         case response.code
@@ -43,51 +42,23 @@ command :find do |c|
           for i in 1..(number_of_datasets/5 + 1)
             sub_datasets = datasets[(5 * i - 5) .. (5 * i - 1)]
           
-            sub_datasets.each_with_index do |ds, index|
-              puts ("#{index+1}. ".colorize(:yellow) +
-                    "#{ds["title"]}".colorize(:green) +
-                    " id: ".colorize(:blue) +
-                    "#{ds["_id"]}")
-              puts ("#{ds["spatial"].take(5)}")
-              puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
-            end
-            puts
+            Datahunter.print_coll_of_datasets_info_light sub_datasets
             
             case ask "### GET A DATASET ? (1/..5), show next 5 datasets? (RET) or abort? (abort)".colorize(:yellow)
             when '1'
-              if sub_datasets[0].has_key?("resources") and sub_datasets[0]["resources"].any?
-                Datahunter.download_the_data sub_datasets[0]
-              else
-                Datahunter.open_in_browser sub_datasets[0]["uri"]
-              end
+              Datahunter.get_dataset sub_datasets[0]
               break
             when '2'
-              if sub_datasets[1].has_key?("resources") and sub_datasets[1]["resources"].any?
-                Datahunter.download_the_data sub_datasets[1]
-              else
-                Datahunter.open_in_browser sub_datasets[1]["uri"]
-              end
+              Datahunter.get_dataset sub_datasets[1]
               break
             when '3'
-              if sub_datasets[2].has_key?("resources") and sub_datasets[2]["resources"].any?
-                Datahunter.download_the_data sub_datasets[2]
-              else
-                Datahunter.open_in_browser sub_datasets[2]["uri"]
-              end
+              Datahunter.get_dataset sub_datasets[2]
               break
             when '4'
-              if sub_datasets[3].has_key?("resources") and sub_datasets[3]["resources"].any?
-                Datahunter.download_the_data sub_datasets[3]
-              else
-                Datahunter.open_in_browser sub_datasets[3]["uri"]
-              end
+              Datahunter.get_dataset sub_datasets[3]
               break
             when '5'
-              if sub_datasets[4].has_key?("resources") and sub_datasets[4]["resources"].any?
-                Datahunter.download_the_data sub_datasets[4]
-              else
-                Datahunter.open_in_browser sub_datasets[4]["uri"]
-              end
+              Datahunter.get_dataset sub_datasets[4]
               break
             when 'abort'
               break
@@ -146,18 +117,13 @@ command :get do |c|
       puts "usage: $ hunter get id"
     else
       url = Datahunter.ds_url(args[0])
-      
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
-        
+
         case response.code
         when 200
           ds = JSON.parse(response.body)
           puts
-          if ds.has_key?("resources") and ds["resources"].any?
-            Datahunter.download_the_data ds
-          else
-            Datahunter.open_in_browser ds["uri"]
-          end
+          Datahunter.get_dataset ds
         when 500
           puts "Invalid ID".colorize(:red)
         end
