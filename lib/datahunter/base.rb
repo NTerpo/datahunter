@@ -33,8 +33,8 @@ module Datahunter
   end
 
   def self.print_dataset_info dataset
-    puts ("title: ".colorize(:green) + "#{dataset["title"]}")
-    puts ("#{dataset["description"]}".colorize(:blue)
+    puts ("#{dataset["title"]}".colorize(:green))
+    puts ("#{dataset["description"]}".colorize(:blue))
     puts ("publisher: ".colorize(:blue) + "#{dataset["publisher"]}")
     puts ("temporal: ".colorize(:blue) + "#{dataset["temporal"]}")
     puts ("spatial: ".colorize(:blue) + "#{dataset["spatial"]}")
