@@ -15,7 +15,7 @@ program :help_formatter, :compact
 
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = '$ hunter find <keyword> <spatial coverage> <temporal coverage>'.colorize(:blue)
+  c.summary = 'Displays the datasets corresponding to the query'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
     
@@ -78,7 +78,7 @@ end
 
 command :info do |c|
   c.syntax = 'hunter info <id>'
-  c.summary = 'Get informations about a dataset from its ID'.colorize(:blue)
+  c.summary = 'Displays all the informations about a dataset given its id'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
 
@@ -103,8 +103,7 @@ end
 
 command :get do |c|
   c.syntax = 'hunter get <id>'
-  c.summary =
-    'Get a dataset (direct download if possible, web page if not) from its ID'.colorize(:blue)
+  c.summary = 'Downloads a dataset given its id'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
 
@@ -129,11 +128,7 @@ end
 
 command :about do |c|
   c.syntax = 'hunter about'
-  c.summary = 'About Hunter
-                             * Vision
-                             * Value Proposition
-                             * Stats
-                             * Last datasets indexed'.colorize(:blue)
+  c.summary = 'Gives Hunter\'s vision, the number of datasets indexed etc'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
     puts "
