@@ -59,8 +59,6 @@ We believe that pre-processing data is a bad idea and that hosting them could cr
     If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:
     https://data.consumerfinance.gov/api/views/x94z-ydhh/rows.csv?accessType=DOWNLOAD
 
-![usage](./hunter.gif)
-
 ### $ hunter info
 
     $ hunter info 54de229aa82653913d1142ee
@@ -84,11 +82,11 @@ We believe that pre-processing data is a bad idea and that hosting them could cr
     2. Consumer Complaint Database - XML
     ### which one? (0/1/...)
     1
-    Create/overwrite /Users/Terpolilli/views.json?(y/rename/n)
+    ### Create/overwrite /Users/Terpolilli/views.json?(y/rename/n)
     rename
     Path/to/filename: /Users/Terpolilli/Downloads/consumer-data.json
-    Start downloading...
-    Your file has been downloaded ;)
+    ### Start downloading...
+    ### Your file has been downloaded ;)
     If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:
     https://data.consumerfinance.gov/api/views/x94z-ydhh/rows.csv?accessType=DOWNLOAD
 

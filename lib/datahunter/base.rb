@@ -79,15 +79,15 @@ module Datahunter
       file_name = uri.basename
       loc = location + "/" + file_name
 
-      case ask ("Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
+      case ask ("### Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
       when 'rename'
         loc = ask "Path/to/filename: ".colorize(:yellow)
       when 'n'
         abort("Ok then")
       end
-      puts "Start downloading..."
+      puts "### Start downloading..."
       Downloadr::HTTP.download(url, loc)
-      puts "Your file has been downloaded ;)".colorize(:green)
+      puts "### Your file has been downloaded ;)".colorize(:green)
       Datahunter.print_excuse_and_alternative_url_message alt_url
     end
   end
