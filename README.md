@@ -98,6 +98,14 @@ Don't hesitate to [give us any feedback about you experience with Hunter!](https
 * datasets indexed: 8336
 * last datasets indexed: Canada open data, NETL's Energy Data eXchange, dati.gov.it, complete french health DAMIR data.
 
+## Change Log
+
+* 0.3.x - Merge `$ hunter find <keyword>` and `$ hunter search <keyword>` commands
+The new `$ hunter find` command displays the datasets corresponding to the query, 5 by 5,
+sorted by popularity
+* 0.2.x - New feature: download datasets directly from the CLI 
+* 0.1.x 
+
 ## Roadmap
 
 * more datasets
