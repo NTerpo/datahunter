@@ -15,9 +15,8 @@ program :help_formatter, :compact
 
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = '$ hunter find <keyword> <geo-coverage> <temporal-coverage>'.colorize(:blue)
+  c.summary = '$ hunter find <keyword> <spatial coverage> <temporal coverage>'.colorize(:blue)
   c.description = c.summary
-  c.example 'Find open data for the U.S. population', 'hunter find population us'
   c.action do |args, options|
     
     start_time = Time.now
@@ -67,10 +66,7 @@ command :find do |c|
             end
           end
         when 204
-          puts "We've found nothing for your query. "\
-               "Remember, this is a first prototype, there will be a lot more "\
-               "datasets indexed soon. If you want us to find a dataset for you, or "\
-               "if you just want to give us a feedback, don't hesitate!".colorize(:red)
+          Datahunter.print_no_dataset_message
           Datahunter.print_request_dataset_message
         else
           response.return!(request, result, &block)
@@ -90,7 +86,6 @@ command :info do |c|
       puts "usage: $ hunter info <id>"
     else
       url = Datahunter.ds_url(args[0])
-
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
 
         case response.code
@@ -141,36 +136,24 @@ command :about do |c|
                              * Last datasets indexed'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
-    puts "........8888888888888888888888..........
-.....88888888888888888888888888888......
-....8888888888888888888888888888888.....
-...888888888888888888888888888~88888?...
-..88888...888888888888888888..+888888...
-.888888.=....................O78888888..
-?888888.......................Z88888888.
-8888888.......................888888888.
-8888888.......................888888888.
-8888888:......8O.......88.....888888888.
-88......ZO.....8=.....Z8.....8888888888.
-$.........:8...............888888888888.
-............8.............8888888888888.
-..............O.........:88888888888888.
-...............8........88888888888888..
-................O......8.......888888...
- ................8.88.8.........=8887 ..
-. ................8888...........?8.....
-.. ...........................8888......
-... .........................888........
-....  .....................:88..........
-.....      ...............8.............".colorize(:red)
-    puts
-    puts 'Find and download Open Datasets directly from the terminal!'.colorize(:red)
-    puts 
-    puts 'We believe there will be more and more data available on the web and the main issue will be to find them and to manage each sources. So we try to do it for you: not by pre-processing them but by orienting you.'.colorize(:red)
-    puts
-    puts 'Number of datasets currently indexed: 8335'.colorize(:blue)  
-    puts
-    puts 'Last dataset indexed: "Canada Open Data" "NETLs Energy Data eXchange", dati.gov.it'
+    puts "
+Find and download Open Datasets        ....8888888888888888888888888888888.....
+directly from the terminal!            ...888888888888888888888888888~88888?...
+                                       ..88888...888888888888888888..+888888...
+We believe there will be more          .888888.=....................O78888888..
+and more data available on the web     ?888888.......................Z88888888.
+and the main issue will be to          8888888.......................888888888.
+find them and to manage each sources.  8888888.......................888888888.
+                                       8888888:......8O.......88.....888888888.
+                                       88......ZO.....8=.....Z8.....8888888888.
+                                       $.........:8...............888888888888.
+So we try to show you the way!         ............8.............8888888888888.
+                                       ..............O.........:88888888888888.
+                                       ...............8........88888888888888..
+                                       ................O......8.......888888...
+                                        ................8.88.8.........=8887 ..
+indexed datasets: 8336                 . ................8888...........?8.....
+last dataset: DAMIR french health      .. ...........................8888......".colorize(:red)
     puts
     puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets workflow better!".colorize(:blue)
     Datahunter.print_feedback_request
@@ -178,21 +161,22 @@ $.........:8...............888888888888.
 end
 
 command :guide do |c|
-  c.action {puts ('$ hunter find <keyword> <geo-coverage> <temporal-coverage> '.colorize(:blue) +
-                  '
-* Returns the 3 most popular (most reused, viewed, etc) datasets corresponding to the query
-* Allow you to either download the dataset or to open your favorite browser directly at the good page')
-
-puts ('$ hunter search <keyword> <geo-coverage> <temporal-coverage>'.colorize(:blue) +
-      '
-* Returns all the datasets corresponding to the query, sorted by popularity.
-* WARNING: this command is going to be modified soon!')
-
-puts ('$ hunter about'.colorize(:blue) +
-'
-* Vision
-* Value Proposition
-* Stats
-* Last datasets indexed')}
+  c.action do
+    puts ('$ hunter find <keyword> <spatial coverage> <temporal coverage> '.colorize(:blue) + "\n" +
+          'Datasets corresponding to your query, sorted by popularity, '\
+          'displayed 5 by 5. Search ~> Find ~> Get the data!')
+    puts
+    puts ('$ hunter info <id>'.colorize(:blue) + "\n" +
+          'Display all the informations about a dataset given its id: '\
+          'complete description, publisher, last update, etc')
+    puts
+    puts ('$ hunter get <id>'.colorize(:blue) + "\n" +
+          'Get a dataset given its id: '\
+          'if possible download the data, if not, it opens the web page '\
+          'from where it will be possible')
+    puts
+    puts ('$ hunter about'.colorize(:blue) + "\n" +
+          'About Hunter, the vision, number of datasets indexed etc')
+  end
 end
 default_command :guide
