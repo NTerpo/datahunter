@@ -9,6 +9,7 @@ require 'launchy'
 require 'colorize'
 require 'downloadr'
 
+program :name, 'Hunter'
 program :version, Datahunter::VERSION
 program :description, 'Find an download Open Datasets directly from your terminal'
 program :help_formatter, :compact
