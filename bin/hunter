@@ -15,68 +15,58 @@ program :help_formatter, :compact
 
 command :find do |c|
   c.syntax = 'hunter find keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = '$ hunter find <keyword> <geo-coverage> <temporal-coverage>
-                             * Returns the 3 most popular (most reused, viewed, etc)
-                               datasets corresponding to the triple keyword,
-                               spatial-coverage and temporal-coverage
-                             * Allow you to either download the dataset or to open
-                               your favorite browser directly at the good page'.colorize(:blue)
+  c.summary = 'Displays the datasets corresponding to the query'.colorize(:blue)
   c.description = c.summary
-  c.example 'Find open data for the U.S. population', 'hunter find population us'
   c.action do |args, options|
-
+    
     start_time = Time.now
 
     if args[0].nil?
       puts "usage: $ hunter find keyword [geo] [temp]"
     elsif
-      url = Datahunter.datasets_url(args[0], args[1], args[2])
 
+      url = Datahunter.datasets_url(args[0], args[1], args[2])
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
         elapsed_time = Time.now - start_time
 
         case response.code
         when 200
           datasets = JSON.parse(response.body).reverse
+          number_of_datasets = datasets.length
+          
           puts "### Response in #{elapsed_time} seconds".colorize(:blue)
+          puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
+          puts
           
-          messages = [
-            "### Looks like we've got something for you!".colorize(:blue),
-            "### And this one?".colorize(:blue),
-            "### Last try...".colorize(:blue)
-          ]
+          for i in 1..(number_of_datasets/5 + 1)
+            sub_datasets = datasets[(5 * i - 5) .. (5 * i - 1)]
           
-          3.times do |index|
-            puts messages[index]
-            puts
-            Datahunter.print_dataset_info datasets[index]
+            Datahunter.print_coll_of_datasets_info_light sub_datasets
             
-            case ask "### get the data? (y/n)".colorize(:yellow)
-            when 'y'
-              if datasets[index].has_key?("resources") and datasets[index]["resources"].any?
-                Datahunter.download_the_data datasets[index]
-              else
-                Datahunter.open_in_browser datasets[index]["uri"]
-              end
+            case ask "### GET A DATASET ? (1/..5), show next 5 datasets? (RET) or abort? (abort)".colorize(:yellow)
+            when '1'
+              Datahunter.get_dataset sub_datasets[0]
               break
-           
-            else # When no
-              if index == 2
-                puts ("You may want to try: ".colorize(:red) + "'$ hunter search #{args[0].downcase}'".colorize(:blue))
-              end
-              if index > 2 or datasets[index+1].nil?
-                Datahunter.print_excuse_message
-                Datahunter.print_request_dataset_message
-                Datahunter.print_feedback_request
-                break
-              end
+            when '2'
+              Datahunter.get_dataset sub_datasets[1]
+              break
+            when '3'
+              Datahunter.get_dataset sub_datasets[2]
+              break
+            when '4'
+              Datahunter.get_dataset sub_datasets[3]
+              break
+            when '5'
+              Datahunter.get_dataset sub_datasets[4]
+              break
+            when 'abort'
+              break
+            else
+              next
             end
           end
         when 204
-          puts "We've found nothing for your query. "\
-               "Remember, this is a first prototype, there will be a lot more "\
-               "datasets indexed soon. If you want us to find a dataset for you, or "\
-               "if you just want to give us a feedback, don't hesitate!".colorize(:red)
+          Datahunter.print_no_dataset_message
           Datahunter.print_request_dataset_message
         else
           response.return!(request, result, &block)
@@ -86,55 +76,9 @@ command :find do |c|
   end
 end
 
-command :search do |c|
-  c.syntax = 'hunter search keyword [spatial-coverage] [temporal-coverage]'
-  c.summary = '$ hunter search <keyword> <geo-coverage> <temporal-coverage>
-                             * Returns all the datasets corresponding to
-                               the query, sorted by popularity.
-                             * WARNING: this command is going to be modified soon!'.colorize(:blue)
-  c.description = c.summary
-  c.example 'Search open data for population', 'hunter search population'
-  c.action do |args, options|
-
-    start_time = Time.now
-
-    url = Datahunter.datasets_url(args[0], args[1], args[2])
-
-    response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
-
-      elapsed_time = Time.now - start_time
-
-      case response.code
-      when 200
-        datasets = JSON.parse(response.body).reverse
-        puts "### Response in #{elapsed_time} seconds".colorize(:blue)
-        puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
-        puts
-        datasets.each do |result|
-          puts ("- ".colorize(:yellow) +
-                "#{result["title"]}".colorize(:green) +
-                " id: ".colorize(:blue) +
-                "#{result["_id"]}")
-        end
-        puts
-        puts ("You can get more informations about a dataset with " +
-              "$ hunter info <id>".colorize(:blue))
-        puts ("You can download directly a dataset with " +
-             "$ hunter get <id>".colorize(:blue))
-      when 204
-        puts "We found nothing for your query: as every good hunter... we are still learning".colorize(:red)
-        Datahunter.print_excuse_message
-        Datahunter.print_feedback_request
-      else
-        response.return!(request, result, &block)
-      end
-    end
-  end
-end
-
 command :info do |c|
   c.syntax = 'hunter info <id>'
-  c.summary = 'Get informations about a dataset from its ID'.colorize(:blue)
+  c.summary = 'Displays all the informations about a dataset given its id'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
 
@@ -142,7 +86,6 @@ command :info do |c|
       puts "usage: $ hunter info <id>"
     else
       url = Datahunter.ds_url(args[0])
-
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
 
         case response.code
@@ -160,8 +103,7 @@ end
 
 command :get do |c|
   c.syntax = 'hunter get <id>'
-  c.summary =
-    'Get a dataset (direct download if possible, web page if not) from its ID'.colorize(:blue)
+  c.summary = 'Downloads a dataset given its id'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
 
@@ -169,18 +111,13 @@ command :get do |c|
       puts "usage: $ hunter get id"
     else
       url = Datahunter.ds_url(args[0])
-      
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
-        
+
         case response.code
         when 200
           ds = JSON.parse(response.body)
           puts
-          if ds.has_key?("resources") and ds["resources"].any?
-            Datahunter.download_the_data ds
-          else
-            Datahunter.open_in_browser ds["uri"]
-          end
+          Datahunter.get_dataset ds
         when 500
           puts "Invalid ID".colorize(:red)
         end
@@ -191,43 +128,27 @@ end
 
 command :about do |c|
   c.syntax = 'hunter about'
-  c.summary = 'About Hunter
-                             * Vision
-                             * Value Proposition
-                             * Stats
-                             * Last datasets indexed'.colorize(:blue)
+  c.summary = 'Gives Hunter\'s vision, the number of datasets indexed etc'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
-    puts "........8888888888888888888888..........
-.....88888888888888888888888888888......
-....8888888888888888888888888888888.....
-...888888888888888888888888888~88888?...
-..88888...888888888888888888..+888888...
-.888888.=....................O78888888..
-?888888.......................Z88888888.
-8888888.......................888888888.
-8888888.......................888888888.
-8888888:......8O.......88.....888888888.
-88......ZO.....8=.....Z8.....8888888888.
-$.........:8...............888888888888.
-............8.............8888888888888.
-..............O.........:88888888888888.
-...............8........88888888888888..
-................O......8.......888888...
- ................8.88.8.........=8887 ..
-. ................8888...........?8.....
-.. ...........................8888......
-... .........................888........
-....  .....................:88..........
-.....      ...............8.............".colorize(:red)
-    puts
-    puts 'Find and download Open Datasets directly from the terminal!'.colorize(:red)
-    puts 
-    puts 'We believe there will be more and more data available on the web and the main issue will be to find them and to manage each sources. So we try to do it for you: not by pre-processing them but by orienting you.'.colorize(:red)
-    puts
-    puts 'Number of datasets currently indexed: 8335'.colorize(:blue)  
-    puts
-    puts 'Last dataset indexed: "Canada Open Data" "NETLs Energy Data eXchange", dati.gov.it'
+    puts "
+Find and download Open Datasets        ....8888888888888888888888888888888.....
+directly from the terminal!            ...888888888888888888888888888~88888?...
+                                       ..88888...888888888888888888..+888888...
+We believe there will be more          .888888.=....................O78888888..
+and more data available on the web     ?888888.......................Z88888888.
+and the main issue will be to          8888888.......................888888888.
+find them and to manage each sources.  8888888.......................888888888.
+                                       8888888:......8O.......88.....888888888.
+                                       88......ZO.....8=.....Z8.....8888888888.
+                                       $.........:8...............888888888888.
+So we try to show you the way!         ............8.............8888888888888.
+                                       ..............O.........:88888888888888.
+                                       ...............8........88888888888888..
+                                       ................O......8.......888888...
+                                        ................8.88.8.........=8887 ..
+indexed datasets: 8336                 . ................8888...........?8.....
+last dataset: DAMIR french health      .. ...........................8888......".colorize(:red)
     puts
     puts "### Hunter is still a prototype, please don't hesitate to help us make open datasets workflow better!".colorize(:blue)
     Datahunter.print_feedback_request
@@ -235,21 +156,22 @@ $.........:8...............888888888888.
 end
 
 command :guide do |c|
-  c.action {puts ('$ hunter find <keyword> <geo-coverage> <temporal-coverage> '.colorize(:blue) +
-                  '
-* Returns the 3 most popular (most reused, viewed, etc) datasets corresponding to the query
-* Allow you to either download the dataset or to open your favorite browser directly at the good page')
-
-puts ('$ hunter search <keyword> <geo-coverage> <temporal-coverage>'.colorize(:blue) +
-      '
-* Returns all the datasets corresponding to the query, sorted by popularity.
-* WARNING: this command is going to be modified soon!')
-
-puts ('$ hunter about'.colorize(:blue) +
-'
-* Vision
-* Value Proposition
-* Stats
-* Last datasets indexed')}
+  c.action do
+    puts ('$ hunter find <keyword> <spatial coverage> <temporal coverage> '.colorize(:blue) + "\n" +
+          'Datasets corresponding to your query, sorted by popularity, '\
+          'displayed 5 by 5. Search ~> Find ~> Get the data!')
+    puts
+    puts ('$ hunter info <id>'.colorize(:blue) + "\n" +
+          'Display all the informations about a dataset given its id: '\
+          'complete description, publisher, last update, etc')
+    puts
+    puts ('$ hunter get <id>'.colorize(:blue) + "\n" +
+          'Get a dataset given its id: '\
+          'if possible download the data, if not, it opens the web page '\
+          'from where it will be possible')
+    puts
+    puts ('$ hunter about'.colorize(:blue) + "\n" +
+          'About Hunter, the vision, number of datasets indexed etc')
+  end
 end
 default_command :guide

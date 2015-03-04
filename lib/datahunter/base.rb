@@ -5,7 +5,6 @@ require 'addressable/uri'
 
 module Datahunter
 
-#  DATASETS_URL = "http://localhost:3000/api/datasets/"
   DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
   FEEDBACK_URL = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
   REQUEST_URL =
@@ -33,17 +32,29 @@ module Datahunter
   end
 
   def self.print_dataset_info dataset
-    puts ("title: ".colorize(:green) + "#{dataset["title"]}")
-    puts ("description: ".colorize(:green) + "#{dataset["description"]}")
-    puts ("publisher: ".colorize(:green) + "#{dataset["publisher"]}")
-    puts ("temporal: ".colorize(:green) + "#{dataset["temporal"]}")
-    puts ("spatial: ".colorize(:green) + "#{dataset["spatial"]}")
-    puts ("created: ".colorize(:green) + "#{dataset["created"]}")
-    puts ("updated: ".colorize(:green) + "#{dataset["updated"]}")
-    puts ("score: ".colorize(:green) + "#{dataset["huntscore"]}")
+    puts ("#{dataset["title"]}".colorize(:green))
+    puts ("#{dataset["description"]}".colorize(:blue))
+    puts
+    puts ("publisher: ".colorize(:blue) + "#{dataset["publisher"]}")
+    puts ("temporal: ".colorize(:blue) + "#{dataset["temporal"]}")
+    puts ("spatial: ".colorize(:blue) + "#{dataset["spatial"]}")
+    puts ("created: ".colorize(:blue) + "#{dataset["created"]}")
+    puts ("updated: ".colorize(:blue) + "#{dataset["updated"]}")
+    puts ("score: ".colorize(:blue) + "#{dataset["huntscore"]}")
+  end
+
+  def self.print_coll_of_datasets_info_light coll_of_datasets
+    coll_of_datasets.each_with_index do |ds, index|
+      puts ("#{index+1}. ".colorize(:yellow) +
+            "#{ds["title"]}".colorize(:green) +
+            " id: ".colorize(:blue) +
+            "#{ds["_id"]}")
+      puts ("#{ds["spatial"].take(5)}")
+      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
+    end
     puts
   end
-  
+
   def self.print_downloadable_links resources
     resources.each_with_index do |dl, i|
       puts ("#{i}. ".colorize(:yellow) +
@@ -68,15 +79,15 @@ module Datahunter
       file_name = uri.basename
       loc = location + "/" + file_name
 
-      case ask ("Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
+      case ask ("### Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
       when 'rename'
         loc = ask "Path/to/filename: ".colorize(:yellow)
       when 'n'
         abort("Ok then")
       end
-      puts "Start downloading..."
+      puts "### Start downloading..."
       Downloadr::HTTP.download(url, loc)
-      puts "Your file has been downloaded ;)".colorize(:green)
+      puts "### Your file has been downloaded ;)".colorize(:green)
       Datahunter.print_excuse_and_alternative_url_message alt_url
     end
   end
@@ -105,8 +116,37 @@ module Datahunter
     end
   end
 
-## Messages: feedback and excuses
+  def self.get_dataset dataset
+    if dataset.has_key?("resources") and dataset["resources"].any?
+      Datahunter.download_the_data dataset
+    else
+      Datahunter.open_in_browser dataset["uri"]
+    end
+  end
 
+  ## Messages
+  def self.print_no_dataset_message
+    puts "We've found nothing for your query. "\
+         "Remember, this is a first prototype, there will be a lot more "\
+         "datasets indexed soon. If you want us to find a dataset for you, or "\
+         "if you just want to give us a feedback, don't hesitate!".colorize(:red)
+  end
+
+  def self.print_excuse_and_alternative_url_message alt_url=""
+    puts "If this is not the file you expected, it's maybe because publisher"\
+         " don't always keep the metadata up-to-date. We try to clean most of"\
+         " uri's and check the url. Anyway you may be able to download your"\
+         " file by hand here:"
+    puts "#{alt_url}".colorize(:blue)
+  end
+
+  def self.print_bad_uri_message
+    puts "The URL given by the publisher is not valid. We'll try to find out why "\
+         "as soon as we can!".colorize(:red)
+  end
+
+  
+  ## Feedback requests  
   def self.print_feedback_request
     case ask "### give feedback? (y/n)".colorize(:yellow)
     when 'y'
@@ -121,21 +161,5 @@ module Datahunter
     when 'y'
       Launchy.open(REQUEST_URL, options = {})
     end
-  end
-  
-  def self.print_excuse_message
-    puts "Remember, this is a first prototype, there will surely be a lot more "\
-         "datasets indexed soon. If you want us to find a dataset for you, or "\
-         "if you just want to give us a feedback, don't hesitate!".colorize(:red)
-  end
-
-  def self.print_excuse_and_alternative_url_message alt_url=""
-    puts "If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:"
-    puts "#{alt_url}".colorize(:blue)
-  end
-
-  def self.print_bad_uri_message
-    puts "The URL given by the publisher is not valid. We'll try to find out why "\
-         "as soon as we can!".colorize(:red)
   end
 end
