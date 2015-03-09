@@ -29,16 +29,4 @@ describe 'Hunter' do
       lambda { Datahunter.download_file @url }.should raise_error(NoMethodError)
     end
   end
-
-  describe 'download some data' do
-
-  end
-
-  describe 'open the browser' do
-
-  end
-
-  describe 'get a dataset' do
-
-  end
 end
