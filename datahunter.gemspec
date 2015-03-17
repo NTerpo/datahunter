@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "aruba-rspec"
+  spec.add_development_dependency "omnibus", "4.0.0"
     
   spec.add_runtime_dependency "json", "~> 1.8.1"
   spec.add_runtime_dependency "commander", "~> 4.3.0"
