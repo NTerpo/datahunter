@@ -12,19 +12,32 @@ module Datahunter
 
   @extensions = ["json", "csv", "xml", "zip", "gz", "xls", "xlsx", "shp", "docx", "doc", "pdf", "txt", "tsv"]
 
-  def self.datasets_url tag, geo=nil, temp=nil
-    tag = tag.downcase.split.first if tag
-    geo = geo.downcase if geo
+  #def self.datasets_url tag, geo=nil, temp=nil
+  #  tag = tag.downcase.split.first if tag
+  #  geo = geo.downcase if geo
+  #
+  #  if geo.nil? and temp.nil?
+  #    "#{DATASETS_URL}?tags=#{tag}"
+  #  elsif temp.nil?
+  #    "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}"
+  #  elsif geo.nil?
+  #    "#{DATASETS_URL}?tags=#{tag}&temporal=#{temp}"
+  #  else
+  #    "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
+  #  end
+  #end
 
-    if geo.nil? and temp.nil?
-      "#{DATASETS_URL}?tags=#{tag}"
-    elsif temp.nil?
-      "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}"
-    elsif geo.nil?
-      "#{DATASETS_URL}?tags=#{tag}&temporal=#{temp}"
-    else
-      "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
-    end
+  def self.query_string_builder string
+    s = string
+        .strip
+        .gsub(/ {3,}/, ' ')
+        .gsub(/ {2,}/, ' ')
+        .gsub(/ /, '+')
+    "?q=#{s}"
+  end
+
+  def self.datasets_url query
+    "#{DATASETS_URL}#{Datahunter.query_string_builder query}"
   end
 
   def self.ds_url id
