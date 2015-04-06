@@ -19,7 +19,7 @@ command :find do |c|
   c.summary = 'Displays the datasets corresponding to the query'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
-    
+
     start_time = Time.now
 
     if args[0].nil?
@@ -27,12 +27,12 @@ command :find do |c|
     elsif
 
       # url = Datahunter.datasets_url(args[0], args[1], args[2])
-
-      query = args.join(" ")
       
+      query = args.join(" ")
+      puts Datahunter::VERSION
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
         elapsed_time = Time.now - start_time
-
+        
         case response.code
         when 200
           datasets = JSON.parse(response.body).reverse
