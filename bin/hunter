@@ -26,7 +26,10 @@ command :find do |c|
       puts "usage: $ hunter find keyword [geo] [temp]"
     elsif
 
-      url = Datahunter.datasets_url(args[0], args[1], args[2])
+      # url = Datahunter.datasets_url(args[0], args[1], args[2])
+
+      query = args.join(" ")
+      
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
         elapsed_time = Time.now - start_time
 
