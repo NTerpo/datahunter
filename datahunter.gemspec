@@ -20,16 +20,16 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
   
-  spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "rake", "10.0"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "aruba-rspec"
     
-  spec.add_runtime_dependency "json", "~> 1.8.1"
-  spec.add_runtime_dependency "commander", "~> 4.3.1"
-  spec.add_runtime_dependency "rest-client", "~> 1.8.0"
-  spec.add_runtime_dependency "launchy", "~> 2.4.3"
-  spec.add_runtime_dependency "colorize", "~> 0.7.5"
+  spec.add_runtime_dependency "json", "1.8.1"
+  spec.add_runtime_dependency "commander", "4.3.1"
+  spec.add_runtime_dependency "rest-client", "1.8.0"
+  spec.add_runtime_dependency "launchy", "2.4.3"
+  spec.add_runtime_dependency "colorize", "0.7.5"
   spec.add_runtime_dependency "downloadr", "0.0.41"
-  spec.add_runtime_dependency "addressable", "~> 2.3.8"
+  spec.add_runtime_dependency "addressable", "2.3.8"
 end
