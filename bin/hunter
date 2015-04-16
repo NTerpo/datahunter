@@ -47,7 +47,7 @@ command :find do |c|
           
             Datahunter.print_coll_of_datasets_info_light sub_datasets
             
-            case ask ("### Get dataset? (1/..5), next 5 datasets? (RET) or abort? (q)".colorize(:yellow))
+            case ask ("### Get dataset (1/..5), next 5 datasets (RET) or abort? (q): ".colorize(:yellow))
             when '1'
               Datahunter.get_dataset sub_datasets[0]
               break
