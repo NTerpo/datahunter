@@ -13,21 +13,6 @@ module Datahunter
 
   @extensions = ["json", "csv", "xml", "zip", "gz", "xls", "xlsx", "shp", "docx", "doc", "pdf", "txt", "tsv"]
 
-  #def self.datasets_url tag, geo=nil, temp=nil
-  #  tag = tag.downcase.split.first if tag
-  #  geo = geo.downcase if geo
-  #
-  #  if geo.nil? and temp.nil?
-  #    "#{DATASETS_URL}?tags=#{tag}"
-  #  elsif temp.nil?
-  #    "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}"
-  #  elsif geo.nil?
-  #    "#{DATASETS_URL}?tags=#{tag}&temporal=#{temp}"
-  #  else
-  #    "#{DATASETS_URL}?tags=#{tag}&spatial=#{geo}&temporal=#{temp}"
-  #  end
-  #end
-
   def self.query_string_builder string
     s = string
         .strip
@@ -47,7 +32,7 @@ module Datahunter
 
   def self.print_dataset_info dataset
     puts ("#{dataset["title"]}".colorize(:green))
-    puts ("#{dataset["description"]}".colorize(:blue))
+    puts ("#{dataset["description"].gsub(\r\n)}".colorize(:blue))
     puts
     puts ("publisher: ".colorize(:blue) + "#{dataset["publisher"]}")
     puts ("temporal: ".colorize(:blue) + "#{dataset["temporal"]}")
@@ -64,7 +49,7 @@ module Datahunter
             " id: ".colorize(:blue) +
             "#{ds["_id"]}")
       puts ("#{ds["spatial"].take(5)}")
-      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
+      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...').gsub(\r\n)}".colorize(:blue))
     end
     puts
   end

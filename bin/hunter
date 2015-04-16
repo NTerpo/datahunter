@@ -26,8 +26,6 @@ command :find do |c|
       puts "usage: $ hunter find keyword [geo] [temp]"
     elsif
 
-      # url = Datahunter.datasets_url(args[0], args[1], args[2])
-      
       query = args.join(" ")
       url = Datahunter.datasets_url query
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
@@ -47,7 +45,9 @@ command :find do |c|
           
             Datahunter.print_coll_of_datasets_info_light sub_datasets
             
-            case ask ("### Get dataset (1/..5), next 5 datasets (RET) or abort? (q): ".colorize(:yellow))
+            case ask ("Get data? (1..5) ".colorize(:yellow) +
+                      "next 5? (RET) ".colorize(:cyan) +
+                     "abort? (q) ")
             when '1'
               Datahunter.get_dataset sub_datasets[0]
               break
@@ -97,7 +97,7 @@ command :info do |c|
           ds = JSON.parse(response.body)
           puts
           Datahunter.print_dataset_info ds
-        when 500
+        when 400
           puts "Invalid ID".colorize(:red)
         end
       end
@@ -122,7 +122,7 @@ command :get do |c|
           ds = JSON.parse(response.body)
           puts
           Datahunter.get_dataset ds
-        when 500
+        when 400
           puts "Invalid ID".colorize(:red)
         end
       end
