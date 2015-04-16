@@ -49,7 +49,7 @@ module Datahunter
             " id: ".colorize(:blue) +
             "#{ds["_id"]}")
       puts ("#{ds["spatial"].take(5)}")
-      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...').gsub(\r\n)}".colorize(:blue))
+      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...').gsub(\"\n\")}".colorize(:blue))
     end
     puts
   end
