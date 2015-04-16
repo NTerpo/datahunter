@@ -21,7 +21,7 @@ command :find do |c|
   c.action do |args, options|
 
     start_time = Time.now
-
+    
     if args[0].nil?
       puts "usage: $ hunter find keyword [geo] [temp]"
     elsif
@@ -42,12 +42,12 @@ command :find do |c|
           puts "### We've found #{datasets.size} datasets corresponding to your query '#{query}':".colorize(:blue)
           puts
           
-          for i in 1..(number_of_datasets/5 + 1)
+          for i in 1..(number_of_datasets/5 +1)
             sub_datasets = datasets[(5 * i - 5) .. (5 * i - 1)]
           
             Datahunter.print_coll_of_datasets_info_light sub_datasets
             
-            case ask ("### Get dataset ? (1/..5), next 5 datasets? (RET) or abort? (abort)".colorize(:yellow))
+            case ask ("### Get dataset? (1/..5), next 5 datasets? (RET) or abort? (q)".colorize(:yellow))
             when '1'
               Datahunter.get_dataset sub_datasets[0]
               break
@@ -63,7 +63,7 @@ command :find do |c|
             when '5'
               Datahunter.get_dataset sub_datasets[4]
               break
-            when 'abort'
+            when 'q'
               break
             else
               next
