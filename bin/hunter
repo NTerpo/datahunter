@@ -19,24 +19,27 @@ command :find do |c|
   c.summary = 'Displays the datasets corresponding to the query'.colorize(:blue)
   c.description = c.summary
   c.action do |args, options|
-    
+
     start_time = Time.now
 
     if args[0].nil?
       puts "usage: $ hunter find keyword [geo] [temp]"
     elsif
 
-      url = Datahunter.datasets_url(args[0], args[1], args[2])
+      # url = Datahunter.datasets_url(args[0], args[1], args[2])
+      
+      query = args.join(" ")
+      url = Datahunter.datasets_url query
       response = RestClient.get(url, :content_type => :json) do |response, request, result, &block|
         elapsed_time = Time.now - start_time
-
+        
         case response.code
         when 200
-          datasets = JSON.parse(response.body).reverse
+          datasets = JSON.parse(response.body) #.reverse
           number_of_datasets = datasets.length
           
           puts "### Response in #{elapsed_time} seconds".colorize(:blue)
-          puts "### We've found #{datasets.size} datasets corresponding to your query #{args[0].downcase}:".colorize(:blue)
+          puts "### We've found #{datasets.size} datasets corresponding to your query '#{query}':".colorize(:blue)
           puts
           
           for i in 1..(number_of_datasets/5 + 1)
