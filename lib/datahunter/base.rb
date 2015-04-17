@@ -5,8 +5,8 @@ require 'addressable/uri'
 
 module Datahunter
 
-  DATASETS_URL = "http://localhost:3000/api/datasets/"
-  # DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
+  # DATASETS_URL = "http://localhost:3000/api/datasets/"
+  DATASETS_URL = "http://shrouded-harbor-5877.herokuapp.com/api/datasets/"
   FEEDBACK_URL = "https://docs.google.com/forms/d/1yNzZjCCXvWHQCbWz4sx-nui3LafeeLcT7FF9T-vbKvw/viewform"
   REQUEST_URL =
     "https://docs.google.com/forms/d/1NRKWmb_mcpKJmrutXvZSZnysM_v0rfLhjD897H3Myrw/viewform?usp=send_form"
@@ -49,7 +49,7 @@ module Datahunter
             " id: ".colorize(:blue) +
             "#{ds["_id"]}")
       puts ("#{ds["spatial"].take(5)}")
-      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...').gsub(\"\n\")}".colorize(:blue))
+      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
     end
     puts
   end

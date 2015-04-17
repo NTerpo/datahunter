@@ -17,13 +17,13 @@ describe 'Hunter' do
   describe 'download a file' do
     
     it 'should raise an error with an invalid uri' do
-      lambda { Datahunter.download_file @invalid_url }.should   raise_error(Launchy::ApplicationNotFoundError) 
+      lambda { Datahunter.download_file @invalid_url }.should raise_error(Launchy::ApplicationNotFoundError) 
     end    
     
-    it 'should open the browser if the file extension is not acceptable' do
-      lambda { Datahunter.download_file @bad_url }.should_not raise_error
-      
-    end
+    #it 'should open the browser if the file extension is not acceptable' do
+    #  lambda { Datahunter.download_file @bad_url }.should_not raise_error
+    #  
+    #end
     
     it 'should ask if rename the file if the file extension is acceptable' do
       lambda { Datahunter.download_file @url }.should raise_error(NoMethodError)
