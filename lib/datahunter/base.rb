@@ -22,6 +22,14 @@ module Datahunter
     "?q=#{s}"
   end
 
+  def self.clean_string string
+    string
+      .gsub(/\n/, "")
+      .gsub(/\r/, "")
+      .gsub(/--/, "")
+      .gsub(/  /, " ")
+  end
+
   def self.datasets_url query
     "#{DATASETS_URL}#{Datahunter.query_string_builder query}"
   end
@@ -32,7 +40,7 @@ module Datahunter
 
   def self.print_dataset_info dataset
     puts ("#{dataset["title"]}".colorize(:green))
-    puts ("#{dataset["description"]}".colorize(:blue))
+    puts ("#{Datahunter.clean_string dataset["description"].}".colorize(:blue))
     puts
     puts ("publisher: ".colorize(:blue) + "#{dataset["publisher"]}")
     puts ("temporal: ".colorize(:blue) + "#{dataset["temporal"]}")
