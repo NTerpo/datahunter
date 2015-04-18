@@ -20,73 +20,77 @@ We believe that pre-processing data is a bad idea and that hosting them could cr
 
     $ gem install datahunter
 
+## Version
+
+Hunter is currently `0.4.xx`
+
+Be careful every version before `0.4.0` **won't work** since the Hunter API has changed and now use Elastic Search.
+
 ## Usage
 
 ### $ hunter find
 
     $ hunter find consumer
-    ### Response in 0.894806 seconds
-    ### We've found 34 datasets corresponding to your query consumer:
+    ### Response in 0.266687 seconds
+    ### We've found 14 datasets corresponding to your query 'consumer':
     
-    1. Consumer Complaint Database id: 54de229aa82653913d1142ee
-    ["us", "usa", "america", "united states", "united-states"]
+    1. Consumer Complaint Database id: AUzHZIcnlutSVlmd6y27
+    ["us", "usa", "america", "united states"]
     These are complaints we’ve received about financial products and services.
-    2. Consumer Expenditure Survey id: 54de229ba82653913d1142f8
-    ["us", "usa", "america", "united states", "united-states"]
-    The Consumer Expenditure Survey (CE) program consists of two surveys, the quarterly Interview ...
-    3. Farmers Markets Geographic Data id: 54de229ba82653913d1142fe
-    ["us", "usa", "america", "united states", "united-states"]
+    2. Farmers Markets Geographic Data id: AUzHZJZilutSVlmd6y3K
+    ["us", "usa", "america", "united states"]
     longitude and latitude, state, address, name, and zip code of Farmers Markets in the United ...
-    4. Consumer Price Indices id: 54e8c7dfa8268b5c235ac352
-    ["england", "scotland", "wales", "northern_ireland"]
-    Contains price indices, percentage changes and weights for the Consumer Prices Index (CPI), Retail ...
-    5. Organogram and staff pay data for the Consumer Council for Water id: 54e8c872a8268b5c235ac5d9
-    ["uk", "england", "scotland", "wales", "ireland"]
-    A list of most Senior Civil Service posts in the Consumer Council for Water including title, ...
+    3. Food Price Outlook id: AUzHZKVglutSVlmd6y3Z
+    ["us", "usa", "america", "united states"]
+    The Consumer Price Index (CPI) for food is a component of the all-items CPI. The CPI measures the ...
+    4. All Product Recalls id: AUzHZLOplutSVlmd6y3o
+    ["us", "usa", "america", "united states"]
+    Recalls and product safety news. CPSC is charged with protecting the public from unreasonable risks ...
+    5. SaferProducts API id: AUzHZPzclutSVlmd6y4x
+    ["us", "usa", "america", "united states"]
+    On March 11, 2011, the U.S. Consumer Product Safety Commission launched SaferProducts.gov. This ...
     
-    ### GET A DATASET ? (1/..5), show next 5 datasets? (RET) or abort? (abort)
-    1
+    ### Get data? (1..5) Show next 5 datasets? (RET) abort? (q)
+    > 1
     0. Consumer Complaint Database - CSV
     1. Consumer Complaint Database - JSON
     2. Consumer Complaint Database - XML
     3. Consumer Complaint Database - api
     ### which one? (0/1/...)
-    1
-    Create/overwrite /Users/Terpolilli/views.json?(y/rename/n)
-    y
-    Start downloading...
-    Your file has been downloaded ;)
-    If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:
-    https://data.consumerfinance.gov/api/views/x94z-ydhh/rows.csv?accessType=DOWNLOAD
-
+    > 1
+    ### Create/overwrite /Users/my_project/views.json? (RET) Rename? (r) abort? (q)
+    >
+    ### Start downloading...
+    ### Your file has been downloaded ;)
+    
 ![demo](hunter.gif)
 
 ### $ hunter info
 
-    $ hunter info 54de229aa82653913d1142ee
-
+    $ hunter info AUzHZIcnlutSVlmd6y27
+    
     Consumer Complaint Database
     These are complaints we’ve received about financial products and services.
     
     publisher: Consumer Financial Protection Bureau
     temporal: ["2011", "2012", "2013"]
-    spatial: ["us", "usa", "america", "united states", "united-states", "united states of america", "united-states-of-america", "world", "countries", "all"]
-    created: 2014-02-25T18:48:25.000Z
-    updated: 2015-01-30T15:16:28.000Z
-    score: 26.683
+    spatial: ["us", "usa", "america", "united states"]
+    created: 2014-02-25T19:48:25:192000
+    updated: 2015-03-13T01:32:35:438000
+    score: 35.119
 
-### $ hunter get 
+### $ hunter get
 
-    $ hunter get 548c82a7a826dfe85070e5fa
-    
+    $ bin/hunter get AUzHZIcnlutSVlmd6y27
+
     0. Consumer Complaint Database - CSV
     1. Consumer Complaint Database - JSON
     2. Consumer Complaint Database - XML
+    3. Consumer Complaint Database - api
     ### which one? (0/1/...)
-    1
-    ### Create/overwrite /Users/Terpolilli/views.json?(y/rename/n)
-    rename
-    Path/to/filename: /Users/Terpolilli/Downloads/consumer-data.json
+    > 1
+    ### Create/overwrite /Users/Terpolilli/Documents/Sites/datahunter/views.json? (RET) Rename? (r) abort? (q)
+    >
     ### Start downloading...
     ### Your file has been downloaded ;)
     If this is not the file you expected, it's maybe because publisher don't always keep the metadata up-to-date. We try to clean most of uri's and check the url. Anyway you may be able to download your file by hand here:
@@ -97,11 +101,12 @@ Don't hesitate to [give us any feedback about you experience with Hunter!](https
 
 ## Update
 
-* datasets indexed: 8336
+* datasets indexed: 8336 (temporaly only ~2000 are available)
 * last datasets indexed: Canada open data, NETL's Energy Data eXchange, dati.gov.it, complete french health DAMIR data.
 
 ## Change Log
 
+* 0.4.x - Adapted to the new Hunter API version (based on ElasticSearch)
 * 0.3.x - Merge `$ hunter find <keyword>` and `$ hunter search <keyword>` commands.
 The new `$ hunter find` command displays the datasets corresponding to the query, 5 by 5,
 sorted by popularity
