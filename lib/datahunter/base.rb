@@ -52,12 +52,13 @@ module Datahunter
 
   def self.print_coll_of_datasets_info_light coll_of_datasets
     coll_of_datasets.each_with_index do |ds, index|
+      desc = clean_string ds["description"]
       puts ("#{index+1}. ".colorize(:yellow) +
             "#{ds["title"]}".colorize(:green) +
             " id: ".colorize(:blue) +
             "#{ds["_id"]}")
       puts ("#{ds["spatial"].take(5)}")
-      puts ("#{ds["description"][0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
+      puts ("#{desc[0..100].gsub(/\w+\s*$/,'...')}".colorize(:blue))
     end
     puts
   end
