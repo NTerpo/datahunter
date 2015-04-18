@@ -78,7 +78,10 @@ module Datahunter
       file_name = uri.basename
       loc = location + "/" + file_name
 
-      puts ("### Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
+      puts ("### Create/overwrite #{loc}? (RET) ".colorize(:yellow) +
+            "Rename? (r) ".colorize(:cyan) +
+            "abort? (q)")
+      
       case ask "> "
       when 'rename'
         puts "Path/to/filename: ".colorize(:yellow)
