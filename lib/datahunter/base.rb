@@ -78,9 +78,11 @@ module Datahunter
       file_name = uri.basename
       loc = location + "/" + file_name
 
-      case ask ("### Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
+      puts ("### Create/overwrite #{loc}?(y/rename/n)".colorize(:yellow))
+      case ask "> "
       when 'rename'
-        loc = ask "Path/to/filename: ".colorize(:yellow)
+        puts "Path/to/filename: ".colorize(:yellow)
+        loc = ask "> "
       when 'n'
         abort("Ok then")
       end
@@ -99,7 +101,8 @@ module Datahunter
       dl = 0
     else
       Datahunter.print_downloadable_links resources
-      dl = ask("### which one? (0/1/...)".colorize(:yellow), Integer) {|i| i.in = 0..(number_of_downloadable_links - 1)}
+      puts "### which one? (0/1/...)".colorize(:yellow)
+      dl = ask("> ", Integer) {|i| i.in = 0..(number_of_downloadable_links - 1)}
     end
     
     dl = dl.to_i
@@ -147,7 +150,8 @@ module Datahunter
   
   ## Feedback requests  
   def self.print_feedback_request
-    case ask "### give feedback? (y/n)".colorize(:yellow)
+    puts "### give feedback? (y/n)".colorize(:yellow)
+    case ask "> "
     when 'y'
       Launchy.open(FEEDBACK_URL, options = {})
     else
@@ -156,7 +160,8 @@ module Datahunter
   end
 
   def self.print_request_dataset_message
-    case ask "### request a dataset? (y/n)".colorize(:yellow)
+    puts "### request a dataset? (y/n)".colorize(:yellow)
+    case ask "> "
     when 'y'
       Launchy.open(REQUEST_URL, options = {})
     end

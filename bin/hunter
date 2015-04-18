@@ -44,10 +44,11 @@ command :find do |c|
             sub_datasets = datasets[(5 * i - 5) .. (5 * i - 1)]
           
             Datahunter.print_coll_of_datasets_info_light sub_datasets
-            
-            case ask ("Get data? (1..5)     ".colorize(:yellow) +
-                      "next 5? (RET)     ".colorize(:cyan) +
-                      "abort?(q): ")
+
+            puts ("### Get data? (1..5) ".colorize(:yellow) +
+                  "Show next 5 datasets? (RET) ".colorize(:cyan) +
+                  "abort? (q)")
+            case ask "> "
             when '1'
               Datahunter.get_dataset sub_datasets[0]
               break
